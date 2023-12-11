@@ -1,0 +1,147 @@
+﻿@using LD.Entities.Enumerations
+@model ListaDistribucion.Web.Models.Security.SecurityModel
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    function cambiarRol(idRol, rol, tag) {
+        showLoading("Enviando información. Espere por favor...");
+        var strUrl = pathToAction() + "/Security/changeRole";
+        $.ajax({
+            type: 'POST',
+            url: strUrl,
+            dataType: "json",
+            data: {
+                idRol: idRol,
+                rol: rol,
+                tag: tag
+            },
+            success: function (response) {
+                closeNotify();
+                showSuccess("Transacción exitosa. Espere por favor...");
+                //openPost(pathToAction() + "/Home/", "");
+                window.location.href = pathToAction() + "/Home/";
+            }
+        });
+    }
+
+    function cambiarCompania(idPais) {
+        showLoading("Enviando información. Espere por favor...");
+        var strUrl = pathToAction() + "/Security/changeCompany";
+        $.ajax({
+            type: 'POST',
+            url: strUrl,
+            dataType: "json",
+            data: {
+                idPais: idPais,
+            },
+            success: function (response) {
+                closeNotify();
+                showSuccess("Transacción exitosa. Espere por favor...");
+                //openPost(pathToAction() + "/Home/", "");
+                window.location.href = pathToAction() + "/Home/";
+            }
+        });
+    }
+
+    function establecerRolDefecto(id_rol, id_Usuario) {
+        
+        showLoading("Enviando información. Espere por favor...");
+        var strUrl = pathToAction() + "/Security/changeDefaultRole";
+        $.ajax({
+            type: 'POST',
+            url: strUrl,
+            dataType: "json",
+            data: {
+                idRol: id_rol,
+                idUsuario: id_Usuario,
+            },
+            success: function (response) {
+                closeNotify();
+                showSuccess("Transacción exitosa. Espere por favor...");
+                //openPost(pathToAction() + "/Home/", "");
+                window.location.href = pathToAction() + "/Home/";
+            }
+        });
+    }
+
+    function openPost(url, param) {
+        var formElement = document.createElement("form");
+        formElement.setAttribute("method", "post");
+        formElement.setAttribute("action", url);
+        formElement.setAttribute("target", "_parent");
+
+        var field = document.createElement("input");
+        field.setAttribute("name", "token");
+        field.setAttribute("value", param);
+        formElement.appendChild(field);
+        document.body.appendChild(formElement);
+        formElement.submit();
+    }
+
+</script>
+
+<div id="roles_usuario" class="" style="clear:both;">
+
+    <div class="" id="content_roles_usuario">
+        <table id="list_roles_usuario" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+            <thead>
+                <tr>
+                    <th colspan="@Model.ListadoRoles.Count">Roles disponibles para usted</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @foreach (var rol in Model.ListadoRoles)
+                    {
+                        <td>
+                            @if (rol.rol_id == Model.Usuario.DEFAULT_ROL)
+                            {
+                                <a href="javascript:establecerRolDefecto(@rol.rol_id, @Model.Usuario.ID_USER);"><i style="color:green" class="fa fa-toggle-on"></i></a>
+                            }
+                            else
+                            {
+                                <a href="javascript:establecerRolDefecto(@rol.rol_id, @Model.Usuario.ID_USER);"><i class="fa fa-toggle-off"></i></a>
+                            }
+                            <a href="javascript:cambiarRol(@rol.rol_id, '@rol.rol_name', '@rol.rol_initials');">@rol.rol_name</a>
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.cambiarCompania || Model.Rol == Enumeraciones.PerfilesModulo.AA_Administración.ToString().Replace("_"," "))
+    {
+        <div class="mt-2">
+            <table id="list_companias" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th colspan="3">Cambio de compañía</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="javascript:cambiarCompania(@((int)Enumeraciones.Pais.Colombia));">
+                                <img class="mr-1" src="@Url.Content("~/Gallery/colombia.png")" alt="Colombia" width="15">Colombia
+                            </a>
+                        </td>
+                        <td>
+                            <a href="javascript:cambiarCompania(@((int)Enumeraciones.Pais.Ecuador));">
+                                <img src="@Url.Content("~/Gallery/ecuador.png")" alt="Colombia" width="15">Ecuador
+                            </a>
+                        </td>
+                        <td>
+                            <a href="javascript:cambiarCompania(@((int)Enumeraciones.Pais.Mexico));">
+                                <img class="mr-1" src="@Url.Content("~/Gallery/mexico.png")" alt="Colombia" width="15">México
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

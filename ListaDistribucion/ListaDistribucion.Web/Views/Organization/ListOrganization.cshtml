@@ -1,0 +1,117 @@
+﻿@using LD.Utilities.ExtensionMethods
+@model ListaDistribucion.Web.Models.Organization.OrganizationModel
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    function searchOrganization() {
+
+        $(".buscador").show();
+        validateForm("datos_buscador");
+
+        var msjError = "";
+
+        if ($("#datos_buscador").valid() && msjError == "") {
+
+            showLoading("Enviando información. Espere por favor...");
+            var strUrl = pathToAction() + "/Organization/searchOrganization";
+            var dataForm = new FormData(document.getElementById("datos_buscador"));
+
+            $.ajax({
+                type: 'POST',
+                url: strUrl,
+                dataType: "html",
+                data: dataForm,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    closeNotify();
+                    showSuccess("Transacción exitosa. Espere por favor...");
+                    $("#resultado_busqueda").html(response);
+                }
+            });
+        }
+        else {
+            showError("Por favor revise los campos marcados." + msjError);
+        }
+    }
+
+    $(document).ready(function () {
+        $("#AgentClient").on('change', function () {
+            loader();
+            cargarSelect('DashBoardQuote/obtenerClienteAgente', $("#AgentClient").val(), "customers", null, $("#AgentClient").val());
+            loader();
+        });        
+    });
+
+  function loadClientes() {
+
+        loader();
+        $("#content").load(pathToAction() + '/Organization/Index', {}, function () {
+            loader();
+        });
+    }
+
+</script>
+
+<div class="row-fluid">
+    <div class="col-md-12 bg-primary-custom">
+        <div class="titulo">Organizaciones</div>
+    </div>
+</div>
+
+<div class="container-fluid" style="clear:both;padding-top:15px;padding-left:1rem;padding-right:1rem;">
+    <div class="panel panel-bordered-primary buscador">
+        <div class="panel-body panel-custom-interno">
+
+            Parámetros de busqueda
+            <button class="btn btn-info btn-sm float-right" type="button" data-toggle="collapse" data-target="#collapseBuscador" aria-expanded="false" aria-controls="collapseBuscador">
+                Mostrar / Ocultar
+            </button>
+            <br />
+            <div class="collapse" id="collapseBuscador">
+                <div class="card card-body border-0 p-1">
+                    <form id="datos_buscador" name="datos_buscador" action="" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="mb-0">Comercial:</label>
+                                @Html.Select2("comercialId", "ObtenerComerciales", "Seleccione uno...", false,"", "", 3, false)                                
+                            </div>                        
+                            <div class="col-md-3">
+                                <label class="mb-0">Sale Support:</label>
+                                @Html.Select2("salesupportId", "ObtenerSaleSupport", "Seleccione uno...", false,"", "", 3, false)
+                            </div>
+                            <div class="col-md-3">
+                                <label class="mb-0">Ejecutivo de cuenta:</label>
+                                @Html.Select2("ejecutivoId", "ObtenerEjecutivos", "Seleccione uno...", false,"", "", 3, false)
+                            </div>
+                        </div>
+                        <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                        <div class="row">
+                            <div class="col-md-12 align-self-end">
+                                <center>
+                                    <input type="button" value="Consultar" class="btn btn-primary datos_proceso_btnSave" onclick="searchOrganization();">
+                                    <a href="javascript:limpiarForm('datos_buscador');" class="btn btn-secondary datos_proceso_btnSave" onclick="limpiarForm('datos_buscador');">Limpiar</a>
+                                </center>                            
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="resultado_busqueda">
+        @{
+            await Html.RenderPartialAsync("~/Views/Organization/ResultSearchOrganization.cshtml", Model);
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        window.setInterval("activarSession(0)", 200000);
+    });
+</script>

@@ -1,0 +1,97 @@
+﻿@model ListaDistribucion.Web.Models.Instructive.InstructiveModel
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    function searchInstructives() {
+
+        $(".buscador").show();
+        validateForm("datos_buscador");
+
+        var msjError = "";
+
+        if ($("#datos_buscador").valid() && msjError == "") {
+
+            showLoading("Enviando información. Espere por favor...");
+            var strUrl = pathToAction() + "/Instructive/InstructiveSearch";
+            var dataForm = new FormData(document.getElementById("datos_buscador"));
+
+            $.ajax({
+                type: 'POST',
+                url: strUrl,
+                dataType: "html",
+                data: dataForm,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    closeNotify();
+                    showSuccess("Transacción exitosa. Espere por favor...");
+                    $("#resultado_busqueda").html(response);
+                }
+            });
+        }
+        else {
+            showError("Por favor revise los campos marcados." + msjError);
+        }
+    }
+
+</script>
+
+<div class="row-fluid">
+    <div class="col-md-12 bg-primary-custom">
+        <div class="titulo">Información de Instructivos</div>
+    </div>
+</div>
+
+<div class="container-fluid" style="clear:both;padding-top:15px;padding-left:1rem;padding-right:1rem;">
+    <div class="panel panel-bordered-primary buscador">
+        <div class="panel-body panel-custom-interno">
+            Parámetros de busqueda
+            <button class="btn btn-info btn-sm float-right" type="button" data-toggle="collapse" data-target="#collapseBuscador" aria-expanded="false" aria-controls="collapseBuscador">
+                Mostrar / Ocultar
+            </button>
+
+            <hr />
+            <div class="collapse" id="collapseBuscador">
+                <div class="card card-body border-0 p-1">
+                    <form id="datos_buscador" name="datos_buscador" action="" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="typeSearch" name="typeSearch" value="1">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="mb-0">Id:</label>
+                                @Html.TextBox("id_instructive", null, new { @class = "form-control", @type = "number" })
+                            </div>
+                            <div class="col-md-2">
+                                <label class="mb-0">Tema:</label>
+                                @Html.TextBox("tema", null, new { @class = "form-control", @size = "250" })
+                            </div>
+                            <div class="col-md-2">
+                                <label class="mb-0">Descripción:</label>
+                                @Html.TextBox("descripcion", null, new { @class = "form-control", @size = "500" })
+                            </div>
+                        </div>
+                        <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                        <center>
+                            <input type="button" value="Consultar" class="btn btn-primary datos_proceso_btnSave" onclick="searchInstructives();">
+                            <a href="javascript:limpiarForm('datos_buscador');" class="btn btn-secondary datos_proceso_btnSave" onclick="">Limpiar</a>
+                        </center>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="resultado_busqueda">
+        @{
+            await Html.RenderPartialAsync("~/Views/Instructive/InstructiveList.cshtml", Model);
+        }
+    </div>
+</div>
+@* Evitar cierre de sesión *@
+<script type="text/javascript">
+    $(document).ready(function () {
+        window.setInterval("activarSession(0)", 200000);
+    });
+</script>

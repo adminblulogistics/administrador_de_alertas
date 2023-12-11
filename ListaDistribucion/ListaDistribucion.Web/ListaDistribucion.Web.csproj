@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LD.DataBLUNET\LD.DataGB.csproj" />
+    <ProjectReference Include="..\LD.DataLD\LD.DataLD.csproj" />
+    <ProjectReference Include="..\LD.EntitiesBLUNET\LD.EntitiesGB.csproj" />
+    <ProjectReference Include="..\LD.Integration.SaleForce\LD.Integrations.csproj" />
+    <ProjectReference Include="..\LD.Services\LD.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\documents\instructives\" />
+  </ItemGroup>
+
+</Project>

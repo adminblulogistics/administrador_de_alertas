@@ -1,0 +1,92 @@
+﻿@model ListaDistribucion.Web.Models.Organization.OrganizationModel
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    //$(document).ready(function () {
+
+    //    $('#check_all').click(function () {
+    //        var checked = $(this).is(':checked');
+    //        $("#list_datos").find('input:checkbox').prop('checked', checked);
+    //    });
+    //})
+    function guardarContactoAlarma()
+    {
+      var checksalarmsSeleccionadas = $('input:checked[name="check_alarm"]');
+
+      for (let i = 0; i < checksalarmsSeleccionadas.length; i++) {
+
+                var objTarifa = $(checksalarmsSeleccionadas[i]);
+                var tarifa = objTarifa.val();
+                var valorTarifa = objTarifa.closest('tr').find('#valor_tarifa').val();
+                var tarifaLista = tarifa.concat("&");
+                var grupoTarifa = objTarifa.parent().parent().data("grupo");
+
+                tarifaLista = tarifaLista.concat(valorTarifa);
+                tarifaLista = tarifaLista.concat("&");
+                tarifaLista = tarifaLista.concat(grupoTarifa);
+                tarifas.push(tarifaLista);
+            }
+
+            var data = {
+                cotizacion: actual_cotizacion,
+                tarifas: tarifas,
+            };
+    }
+
+
+</script>
+<style>
+    .spaces {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        clear: both;
+    }
+
+</style>
+
+
+<div class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Asignación de alarmas</h5>
+            <a href="javascript:;" data-dismiss="modal" aria-label="Close" class="cerrar_form" title="Cerrar"><i class="far fa-times-circle"></i></a>
+        </div>
+        <div class="modal-body">
+          <div class="" id="content_resultado">
+            <form id="resultadoAlarm" name="datos_informacion_alarms" action="" method="post" enctype="multipart/form-data">
+                <div id="alarmas" style="clear: both;">
+                    <div class="" id="content_alarm">
+                                    <table id="list_datos" class="table table-sm table-striped table-bordered dt-responsive" cellspacing="0" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var al in Model.ListAlarms)
+                                            {
+                                                <tr>
+                                                  <td>@al.NAME</td>
+                                                   <td>
+                                                        <input class="float-left mr-1" type="checkbox" name="check_alarm" value="@al.ID_ALARM">
+                                                   </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+@*                        <div class="row col-md-12" style="height:10px;">&nbsp;</div>*@
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+              <input type="button" value="Agregar" class="btn btn-success btn-sm text-white shadow-sm" onclick="guardarContactoAlarma()">
+        </div>
+    </div>
+</div>

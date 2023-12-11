@@ -1,0 +1,66 @@
+﻿@{ Layout = null; }
+<html>
+<head>
+    <meta content="text/html; charset=utf-8">
+    <title>Reporte excel</title>
+    <style>
+        body {
+            overflow-y: scroll;
+            color: #6D6D6D;
+        }
+
+        table {
+            font-family: Arial;
+            font-size: 10px;
+            border-collapse: collapse;
+        }
+
+        table th {
+            background-color: #274160;
+            color: #ffffff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <td colspan="6">
+                <h2>@ViewBag.TituloReporte</h2>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">Usuario: @Context.Session.GetString("NombresUsuario")</td>
+        </tr>
+        <tr>
+            <td colspan="2">Fecha generación: @DateTime.Now.ToShortDateString()</td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>Filtros seleccionados:</b></td>
+        <tr>
+
+            @{
+                if (!string.IsNullOrEmpty(ViewBag.FiltrosReporte))
+                {
+                    var arrFiltros = ViewBag.FiltrosReporte.ToString().Split('#');
+                    foreach (string filtro in arrFiltros)
+                    {
+                        <td><b>@System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(filtro.Replace("_", " "))</b></td>
+                    }
+                }
+                else
+                {
+                    <td colspan="2">Sin información</td>
+                }
+            }
+
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+    </table>
+    <table border="1">
+        @Html.Raw((String)ViewBag.DataExcel)
+    </table>
+</body>
+</html>

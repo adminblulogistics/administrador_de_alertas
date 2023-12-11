@@ -1,0 +1,203 @@
+﻿@using LD.Entities.Enumerations
+@using LD.Utilities.ExtensionMethods
+@model ListaDistribucion.Web.Models.Instructive.InstructiveModel
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#documentos").on('change', function (e) {
+            $("#filesList").html("");
+            for (var i = 0; i < this.files.length; i++) {
+                let fileBloc = $('<span/>', { class: '' }),
+                    fileName = $('<span/>', { class: 'name label label-info p-1 small ml-1 mt-1', text: this.files.item(i).name, style: 'float:left' });
+
+                fileBloc.append(fileName);
+                $("#filesList").append(fileBloc);
+            };
+            let fileDelete = $('<span/>', { class: 'label label-danger p-1 small ml-1 mt-1', text: 'Eliminar', onclick: 'deleteFieldFile(\'documentos\',\'filesList\')', style: 'float:left;cursor:pointer;' });
+            $("#filesList").append(fileDelete);
+        });
+
+    });
+
+    function eliminarArchivo(idInstructive,nombreArchivo, item) {
+
+        bootbox.confirm({
+            title: "Confirmación",
+            message: "Usted va a eliminar el archivo " + nombreArchivo + ", el proceso no se podrá deshacer.<br/><br/>Desea continuar?.",
+            closeButton: true,
+            buttons: {
+                confirm: {
+                    label: 'Si',
+                    className: 'btn-primary'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    showLoading("Enviando información. Espere por favor...");
+                    var strUrl = pathToAction() + "/Instructive/EliminarArchivo";
+
+                    $.ajax({
+                        type: 'POST',
+                        url: strUrl,
+                        dataType: "json",
+                        data: {
+                            id_instructive: idInstructive,
+                            archivo: nombreArchivo,
+                            item: item
+                        },
+                        cache: false,
+                        success: function (response) {
+                            closeNotify();
+                            showSuccess("Transacción exitosa. Espere por favor...");
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function saveInstructive() {
+
+        validateForm("datos_registro_instructivo");
+
+        var msjError = "";
+
+        if ($("#datos_registro_instructivo").valid() && msjError == "") {
+
+            enabledForm("datos_registro_instructivo");
+            showLoading("Enviando información. Espere por favor...");
+
+            var strUrl = pathToAction() + "/Instructive/saveInstructive";
+            var dataForm = new FormData(document.getElementById("datos_registro_instructivo"));
+
+            $.ajax({
+                type: 'POST',
+                url: strUrl,
+                dataType: "json",
+                data: dataForm,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+
+                    closeNotify();
+                    showSuccess("Transacción exitosa. Espere por favor...");
+                    searchInstructives();
+
+                }
+            });
+        }
+        else {
+            showError("Por favor revise los campos marcados." + msjError);
+        }
+    }
+
+</script>
+
+<div style="margin-top:10px;">
+    <div class="panel panel-bordered-primary col-md-12 panel-interno">
+        <div class="panel-body panel-custom-interno">
+            Registro de información de Instructivo
+            <div class="cerrar_form" onclick="searchInstructives();" title="Volver"><i class="fa fa-reply fa-lg"></i></div>
+            <hr />
+            <form id="datos_registro_instructivo" name="datos_registro_instructivo" action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="instructivo_id" name="instructivo_id" value="@Model.instructivo.ID_INSTRUCTIVE">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="mb-0">Tema:</label>
+                        @Html.TextBox("tema", Model.instructivo.TOPIC, new { @class = "form-control required", @size = "500" })
+                    </div>
+                    <div class="col-md-4">
+                        <label class="mb-0">Descripción:</label>
+                        @Html.TextBox("descripcion", Model.instructivo.DESCRIPTION, new { @class = "form-control required", @size = "500" })
+                    </div>
+                    <div class="col-md-4">
+                        <label class="mb-0">Selección Compañias:</label>
+                        @{
+                            var listCompanies = (
+                            from c in Model.ListadoCompanies
+                            select new
+                            {
+                                Value = c.ID_COMPANY,
+                                Text = c.NAME
+                            }
+                            ).ToList();
+                        }
+                        @Html.Select2("list_companias", new SelectList(listCompanies, "Text", "Text"), "Seleccione uno...", false, true,(Model.instructivo.COMPANIES != null ? Model.instructivo.COMPANIES: ""), 10, 0)
+                    </div>
+                    <div class="col-md-4">
+                        <label class="mb-0">Selección Roles:</label>
+                        @{
+                            var listRolesIni = Enum.GetValues(typeof(Enumeraciones.PerfilesModulo))
+                            .Cast<Enumeraciones.PerfilesModulo>()
+                            .Select(d => (d, (int)d))
+                            .ToList();
+
+
+                            var listRoles = (from lr in listRolesIni.ToList()
+                                             select new
+                                             {
+                                                 Value = lr.Item2,
+                                                 Text = lr.d.ToString().Replace("_"," ")
+                                             }
+                            ).ToList();
+
+                        }
+                        @Html.Select2("list_roles", new SelectList(listRoles, "Text", "Text"), "Seleccione uno...", false, true,(Model.instructivo.ROLES != null ? Model.instructivo.ROLES : ""), 10, 0)
+                    </div>
+                </div>
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="mb-0">Archivos:</label>
+                        @Html.TextBox("documentos", "", new { @class = "form-control", @type = "file", @accept = ".pdf,.ppt,.pptx",  @multiple = "multiple" })
+                        <input type="hidden" id="ATTACHED" name="ATTACHED" value="@Model.instructivo.ATTACHED">
+                        @{
+                            if (!string.IsNullOrEmpty(Model.instructivo.ATTACHED))
+                            {
+                                var arrArchivos = Model.instructivo.ATTACHED.Split(';');
+                                var i = 0;
+                                foreach (var archivo in arrArchivos)
+                                {
+                                    if (!string.IsNullOrEmpty(archivo))
+                                    {
+                                        <span>
+                                            <a href="@Url.Content("~/Instructive/VerArchivo?id_instructive=" + Model.instructivo.ID_INSTRUCTIVE + "&item=" + i)" title="Ver @archivo" target="_blank">
+                                                <i class="fa fa-file-archive"></i> @archivo
+
+                                            </a>
+                                            <a href="javascript:eliminarArchivo('@Model.instructivo.ID_INSTRUCTIVE','@archivo','@i');"><i class="fa fa-minus-circle text-danger"></i></a>
+                                        </span>
+                                        <br />
+                                    }
+                                    i = i + 1;
+                                }
+                            }
+                        }
+                        <p id="files-area">
+                            <span id="filesList"></span>
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="mb-0">Estado:</label>
+                        <br />
+                        @Html.RadioButtonList("instructivo_estado", RadioButtonListExtensions.TipoLista.ActInact, true, Model.instructivo.IS_ACTIVE.ToString())
+                    </div>
+                </div>
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <center>
+                    <input type="button" value="Guardar" class="btn btn-primary datos_forma_btnSave" onclick="saveInstructive();">
+                </center>
+            </form>
+            <br />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+﻿@using LD.Entities.Enumerations
+@model ListaDistribucion.Web.Models.HomeModel
+<ul class="navbar-nav bg-gradient-primary-custom sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="@Url.Content("~/Home")">
+        <div class="sidebar-brand-text mx-3">
+            <img class="" src="@Url.Content("~/Gallery/blu_logo_blanco.png")" alt="BLUNET" width="118">
+        </div>
+    </a>
+
+    <!-- Divider -->
+    <hr style="border:1px dotted #fff;margin:0px;" />
+
+    <!-- Nav Item - Dashboard -->
+    @*<li class="nav-item active">
+        <a class="nav-link" href="@Url.Content("~/Home")">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+        </a>
+        </li>*@
+
+     
+    <!-- Heading -->
+    <li class="nav-item align-items-center justify-content-center">
+        <div class="text-white-50" style="padding:10px;">
+            <center class="text-white">
+                <i class="fas fa-user-circle fa-3x"></i>
+                <br />
+                ¡Hola!
+                <br />
+                @Context.Session.GetString("NombresUsuario")
+            </center>
+            <center class="text-white">
+                @switch (Context.Session.GetInt32("IdCompania"))
+                {
+                    case (int)(Enumeraciones.Pais.Colombia):
+                        <img class="my-1" src="@Url.Content("~/Gallery/colombia.png")" alt="Colombia" width="25">
+                        break;
+                    case (int)(Enumeraciones.Pais.Mexico):
+                        <img class="my-1" src="@Url.Content("~/Gallery/mexico.png")" alt="Colombia" width="25">
+                        break;
+                    case (int)(Enumeraciones.Pais.Ecuador):
+                        <img class="my-1" src="@Url.Content("~/Gallery/ecuador.png")" alt="Colombia" width="25">
+                        break;
+                }
+            </center>
+            <a class="text-white" href="javascript:seleccionarRol();" title="Cambiar Rol">
+                <center>
+                    <small><i class="fa fa-sync"></i> Modificar sesión</small>
+                </center>
+            </a>
+        </div>
+    </li>
+
+    <hr style="border:1px dotted #fff;margin:0px;" />
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    @{
+
+        foreach (var menu in Model.ListadoModulosPadres)
+        {
+            var listadoHijos = Model.ListadoModulosHijos.Where(x => x.mod_fatherId == menu.mod_id).ToList();
+
+            if (listadoHijos != null && listadoHijos.Count() > 0)
+            {
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#padre_@menu.mod_id" aria-expanded="true" aria-controls="padre_@menu.mod_id">
+                        <i class="@menu.mod_model"></i>
+                        <span>@menu.mod_name</span>
+                    </a>
+                    <div id="padre_@menu.mod_id" class="collapse" aria-labelledby="headingPages" data-parent="#padre_@menu.mod_id">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            @foreach (var hijos in listadoHijos)
+                            {
+                                if (!string.IsNullOrEmpty(hijos.mod_path))
+                                {
+                                    <a class="collapse-item" href="javascript:cargarContenido('@Url.Content(hijos.mod_path)','@menu.mod_name / @hijos.mod_name', @hijos.mod_id);">
+                                        <i class="@hijos.mod_model"></i>
+                                        @hijos.mod_name
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    @if (!string.IsNullOrEmpty(menu.mod_path))
+                    {
+                        <a class="nav-link" href="javascript:cargarContenido('@Url.Content(menu.mod_path)','@menu.mod_name', @menu.mod_id);">
+                            <i class="@menu.mod_model"></i>
+                            <span>@menu.mod_name</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="nav-link" href="javascript:;">
+                            <i class="@menu.mod_model"></i>
+                            <span>@menu.mod_name</span>
+                        </a>
+                    }
+                </li>
+            }
+        }
+    }
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block" />
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+
+<script type="text/javascript">
+
+    function cargarContenido(url, seleccion, mod) {
+        loader();
+        $("#content").load(pathToAction() + url, { mod: mod }, function () {
+            loader();
+            $(".text-breadcrumb").text(seleccion);
+            goObjHtml("content_breadcrumb", 70);
+        });
+    }
+
+    function toggleActiveMenu(obj) {
+        $(".activeMenu1").removeClass("activeMenu1");
+        $(obj).addClass("activeMenu1");
+    }
+
+    function seleccionarRol() {
+        loader();
+        $("#content").load(pathToAction() + "/Security/selectRole", function () {
+            loader();
+        });
+    }
+
+</script>

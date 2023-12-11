@@ -1,0 +1,83 @@
+﻿@using LD.Entities.Enumerations
+@model ListaDistribucion.Web.Models.HomeModel
+@{ Layout = null; }
+
+<!doctype html>
+<html lang="es">
+<head>
+
+    @if (Model.errorCode == (int)Enumeraciones.ErroresLogin.sesionNula)
+    {
+        <script type="text/javascript">
+
+            window.setTimeout(function () {
+                window.location.replace('@Model.urlLogin');
+            }, 2500);
+
+        </script>
+    }
+
+    <script type="text/javascript">
+
+        function loginExterno() {
+            window.location.replace('@Model.urlLogin');
+        }
+
+    </script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
+
+    <title>:: BLU Logistics :: Carga Internacional : Login</title>
+
+    <style>
+        .bg-page {
+            background-color: #023766;
+            background-image: linear-gradient( 180deg, #023766 10%, #023766 100%);
+            background-size: cover;
+            color: white;
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+
+</head>
+<body id="particles-js" class="bg-page text-center">
+    <div class="container w-100 h-100">
+        <div class="row w-100 h-100">
+            <div class="col-md-12 align-self-center">
+                <div class="error-template">
+                    <img class="img-fluid" src="@Url.Content("~/Gallery/blu_logo_blanco.png")" alt="BLUNET">
+                    <h2 class="">
+                        Acceso denegado.
+                    </h2>
+                    @switch (Model.errorCode)
+                    {
+                        case (int)Enumeraciones.ErroresLogin.usuarioNoImportado:
+                            <p>Usted no cuenta con usuario dentro del cotizador. Por favor, comuníquese con el administrador del sistema.</p>
+                            break;
+                        case (int)Enumeraciones.ErroresLogin.tokenInvalido:
+                            <p>El token de inicio de sesión no es válido. Por favor, comuníquese con el administrador del sistema</p>
+                            break;
+                        case (int)Enumeraciones.ErroresLogin.sesionNula:
+                            <p>Usted no ha iniciado sesión. Este sitio web será redirigido al login. Espere por favor...</p>
+                            break;
+                        case (int)Enumeraciones.ErroresLogin.sessionExpira:
+                            <p>Su sesión ha expirado. Por su seguridad el sistema fue cerrado automáticamente. <a href="javascript:loginExterno();">Ingresar</a></p>
+                            break;
+                        case (int)Enumeraciones.ErroresLogin.usuarioSinRol:
+                            <p>Usted no cuenta con un rol configurado dentro del cotizador. Por favor, comuníquese con el administrador del sistema.</p>
+                            break;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+
+</body>
+</html>

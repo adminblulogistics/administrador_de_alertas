@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LD.DataBLUNET\LD.DataGB.csproj" />
+    <ProjectReference Include="..\LD.DataCotizador\LD.DataCotizador.csproj" />
+    <ProjectReference Include="..\LD.DataLD\LD.DataLD.csproj" />
+    <ProjectReference Include="..\LD.EntitiesBLUNET\LD.EntitiesGB.csproj" />
+    <ProjectReference Include="..\LD.EntitiesCotizador\LD.EntitiesCotizador.csproj" />
+    <ProjectReference Include="..\LD.Entities\LD.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

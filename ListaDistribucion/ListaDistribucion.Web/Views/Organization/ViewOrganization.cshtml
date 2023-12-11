@@ -1,0 +1,114 @@
+﻿@using LD.Utilities.ExtensionMethods
+@model ListaDistribucion.Web.Models.Organization.OrganizationModel
+@{ Layout = null; }
+
+<script>
+
+    $(document).ready(function() {
+        
+        cargarContactos();
+
+    });
+
+    function saveCustomer() {
+
+        validateForm("datos_registro");
+
+        var msjError = "";
+
+        if ($("#datos_registro").valid() && msjError == "") {
+
+            enabledForm("datos_registro");
+            showLoading("Enviando información. Espere por favor...");
+
+            var strUrl = pathToAction() + "/Organization/ActualizarOrganization";
+            var dataForm = new FormData(document.getElementById("datos_registro"));
+
+            $.ajax({
+                type: 'POST',
+                url: strUrl,
+                dataType: "json",
+                data: dataForm,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    closeNotify();
+                    showSuccess("Transacción exitosa. Espere por favor...");
+                }
+            });
+        }
+        else {
+            showError("Por favor revise los campos marcados." + msjError);
+        }
+    }
+
+    function cargarContactos() {
+        loader();
+        $("#contactos-cliente").load(pathToAction() + "/Organization/ListOrganizationContacts", { idOrganization: @Model.Organizacion.ID}, function () {
+            loader();
+        });
+    }
+
+</script>
+
+<div class="row justify-content-md-center" style="margin-top:10px; padding-left: 1rem; padding-right: 1rem;">
+    <div class="panel panel-bordered-primary col-md-12 panel-interno">
+        <div class="panel-body panel-custom-interno">
+            Registro de información de la Organización
+            <div class="cerrar_form" onclick="loadClientes();" title="Volver"><i class="fa fa-reply fa-lg"></i></div>
+            <hr />
+            <form id="datos_registro" name="datos_registro" action="" method="post" enctype="multipart/form-data">
+                
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="mb-0">Id:</label>
+                        <input id="idOrganization" name="idOrganization" class="form-control" type="text" value="@Model.Organizacion.ID" readonly />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="mb-0">Nombre:</label>
+                        <input class="form-control" type="text" value="@Model.Organizacion.NAME" readonly />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="mb-0">Identificación:</label>
+                        <input class="form-control" type="text" value="@Model.Organizacion.IDENTIFICACION" readonly />
+                    </div>
+                </div>
+
+                <div class="row" style="height:10px;">&nbsp;</div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="mb-0">Comercial:</label>
+                        @Html.Select2("comercial1Id", "ObtenerComerciales", "Seleccione uno...", false,@Model.Organizacion.ID_COMERCIAL.ToString(), @Model.Organizacion.COMERCIAL, 3, false)
+                    </div>
+                    <div class="col-md-4">
+                        <label class="mb-0">Sale Support</label>
+                        @Html.Select2("salesupport1Id", "ObtenerComerciales", "Seleccione uno...", false,"", "", 3, false)
+                    </div>
+                    <div class="col-md-2">
+                        <label class="mb-0">Ejecutivo de cuenta</label>
+                        @Html.Select2("ejecutivo1Id", "ObtenerComerciales", "Seleccione uno...", false,@Model.Organizacion.ID_EJECUTIVO.ToString(), @Model.Organizacion.EJECUTIVO, 3, false)
+                    </div>
+                </div>
+
+                <div class="row" style="height:10px;">&nbsp;</div>
+
+                <center>
+                    <input type="button" value="Guardar" class="btn btn-primary datos_forma_btnSave shadow-sm" onclick="saveCustomer();">
+                </center>
+
+            </form>
+            <ul class="nav nav-pills" role="tablist">
+                <li class="nav-item tab_custom">
+                    <a href="#contactos-cliente" class="nav-link active" aria-controls="content-contactos-cliente" role="tab" data-toggle="pill" aria-selected="true" onclick="cargarContactos();">Contactos</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="contactos-cliente" role="tabpanel" class="tab-pane fade show p-2 border active" aria-labelledby="content-contactos-cliente"></div>
+            </div>
+
+        </div>
+    </div>
+</div>

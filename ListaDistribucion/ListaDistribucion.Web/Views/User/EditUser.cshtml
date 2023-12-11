@@ -1,0 +1,119 @@
+﻿@using LD.Utilities.ExtensionMethods
+@model ListaDistribucion.Web.Models.Users.UserModel
+
+@{ Layout = null; }
+
+<script type="text/javascript">
+
+    function guardarUsuario() {
+
+        validateForm("datos_usuario");
+
+        var msjError = "";
+
+        if ($("#datos_usuario").valid() && msjError == "") {
+
+            showLoading("Enviando información. Espere por favor...");
+            var strUrl = pathToAction() + "/User/guardarUsuario";
+            var dataForm = new FormData(document.getElementById("datos_usuario"));
+
+            $.ajax({
+                type: 'POST',
+                url: strUrl,
+                dataType: "json",
+                data: dataForm,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    closeNotify();
+                    showSuccess("Transacción exitosa. Espere por favor...");
+                    loadUsuarios();
+                }
+            });
+        }
+        else {
+            showError("Por favor revise los campos marcados." + msjError);
+        }
+    }
+
+</script>
+
+<div class="row justify-content-md-center" style="margin-top:10px;">
+    <div class="panel panel-bordered-primary col-md-10 panel-interno">
+        <div class="panel-body panel-custom-interno">
+            Registro de usuarios
+            <div class="cerrar_form" onclick="loadUsuarios();" title="Volver"><i class="fa fa-reply fa-lg"></i></div>
+            <hr />
+            <form id="datos_usuario" name="datos_usuario" action="" method="post" enctype="multipart/form-data">
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <div class="row">
+                    <input id="id_Interno" name="id_Interno" value="@Model.usuarioDto.ID_USER" type="hidden" />
+                    <div class="col-md-3">
+                        <label class="mb-0">Documento:</label>
+                        <input id="documento" name="documento" class="form-control" type="text" value="@Model.usuarioDto.DOCUMENT_NUMBER" placeholder="@Model.usuarioDto.DOCUMENT_NUMBER" readonly />
+                    </div>
+                </div>
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="mb-0">Nombres:</label>
+                        <input id="nombres" name="nombres" class="form-control" type="text" value="@Model.usuarioDto.FIRST_NAME" placeholder="@Model.usuarioDto.FIRST_NAME" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Apellidos:</label>
+                        <input id="apellidos" name="apellidos" class="form-control" type="text" value="@Model.usuarioDto.LAST_NAME" placeholder="@Model.usuarioDto.LAST_NAME" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Email:</label>
+                        @Html.TextBox("email", Model.usuarioDto.EMAIL, new { @class = "form-control no_mayus"})                       
+                    </div>
+                </div>
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="mb-0">Cargo:</label>
+                        @Html.TextBox("cargo", Model.usuarioDto.POSITION, new { @class = "form-control no_mayus" })
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Código SF:</label>
+                        @Html.TextBox("codigo_sf", Model.usuarioDto.ID_USER_SF, new { @class = "form-control no_mayus" })
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Código CW:</label>
+                        @Html.TextBox("codigo_cw", Model.usuarioDto.ID_USER_CW, new { @class = "form-control no_mayus" })
+                    </div>
+                    <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Compañía:</label>
+                        <div class="form-group">
+                            @Html.DropDownList("id_compania", new SelectList(Model.Companias, "ID_COMPANY", "NAME", Model.usuarioDto.ID_COMPANY), "Seleccione uno...", new { @class = "form-control required" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Cambia compañia?:</label>
+                        <br />
+                        @Html.RadioButtonList("permite_cambio_pais", RadioButtonListExtensions.TipoLista.SiNo, true, Convert.ToString(Model.usuarioDto.CHANGE_COUNTRY))
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Branch:</label>
+                        <br />
+                        <div class="">
+                            @Html.TextBox("branch", Model.usuarioDto.BRANCH, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Estado:</label>
+                        <br />
+                        @Html.RadioButtonList("activo", RadioButtonListExtensions.TipoLista.ActInact, true, Convert.ToString(Model.usuarioDto.IS_ACTIVE),true)
+                    </div>
+                </div>
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <div class="row" style="height:10px;">&nbsp;</div>
+                <center>
+                    <input type="button" value="Actualizar" class="btn btn-primary datos_proceso_btnSave" onclick="guardarUsuario();">
+                </center>
+            </form>
+        </div>
+    </div>
+</div>

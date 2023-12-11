@@ -1,0 +1,88 @@
+﻿@model ListaDistribucion.Web.Models.Instructive.InstructiveModel
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        oTableExport = $('#list_instructives').dataTable({
+            "pagingType": "full_numbers",
+            "iDisplayLength": 50,
+            "bStateSave": true,
+        });
+
+    });
+
+    function editInstructive(id) {
+
+        var objData = validarRegistrosSeleccionados('check_instructive');
+
+        if (objData.idRegistroSeleccionado != 0 || id == 0) {
+
+            if (id == 0)
+                objData.idRegistroSeleccionado = 0;
+
+            loader();
+
+            $("#content_instructive").load(pathToAction() + '/Instructive/EditInstructive', { idInstructive: objData.idRegistroSeleccionado, referer: 'list_instructives' }, function () {
+                loader();
+                $(".buscador").hide();
+                $(".titulo_resultado_busqueda").hide();
+                $(".content_menu_grilla").hide();
+            });
+        }
+        else
+            showError("Debe seleccionar un registro para realizar la operación");
+    }
+
+</script>
+
+<div class="row-fluid titulo_resultado_busqueda">
+    <div class="col-md-12 bg-primary-custom">
+        <div class="titulo">Resultado de la busqueda</div>
+    </div>
+</div>
+
+<div id="instructives">
+    <div class="content_menu_grilla">
+        <a href="javascript:editInstructive(0)" class="btn btn-success btn-sm" style="margin-top:5px;"> <i class="fa fa-plus-square fa-lg btn-crud"></i> Agregar</a>
+        <a href="javascript:editInstructive()" class="btn btn-primary btn-sm" style="margin-top:5px;"> <i class="fa fa-edit fa-lg btn-crud"></i> Editar</a>
+    </div>
+    <div id="content_instructive">
+        <table id="list_instructives" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+            <thead>
+                <tr>
+                    <th class="no-sort"></th>
+                    <th>Id</th>
+                    <th>Tema</th>
+                    <th>Descripción</th>
+                    <th>Compañias</th>
+                    <th>Roles</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var instructivo in Model.ListadoInstructivos)
+                {
+                    <tr>
+                        <td><input type="radio" name="check_instructive" value="@instructivo.ID_INSTRUCTIVE"></td>
+                        <td>@instructivo.ID_INSTRUCTIVE</td>
+                        <td>@instructivo.TOPIC</td>
+                        <td>@instructivo.DESCRIPTION</td>
+                        <td>@instructivo.COMPANIES</td>
+                        <td>@instructivo.ROLES</td>
+                        <td>@((bool)instructivo.IS_ACTIVE ? "Activo" : "Inactivo")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@* Evitar cierre de sesión *@
+<script type="text/javascript">
+    $(document).ready(function () {
+        window.setInterval("activarSession(0)", 200000);
+    });
+</script>

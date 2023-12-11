@@ -1,0 +1,226 @@
+﻿@using LD.Utilities.ExtensionMethods
+@model ListaDistribucion.Web.Models.Users.UserModel
+@{ Layout = null; }
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        
+    });
+
+    function buscarUsuario() {
+
+        validateForm("datos_buscador");
+
+        var msjError = "";
+
+        if ($("#datos_buscador").valid() && msjError == "") {
+
+            if ($("#buscar_documento").val() == "" && $("#buscar_email").val() == "" && $("#buscar_usuario").val() == "") {
+                showError("Debe ingresar mínmo un valor");
+            }
+
+            else {
+
+                showLoading("Enviando información. Espere por favor...");
+                var strUrl = pathToAction() + "/User/buscarUsuarioCotizadorPorValores";
+                var dataForm = new FormData(document.getElementById("datos_buscador"));
+				
+				        var strUrl = pathToAction() + "/User/buscarUsuarioGBPorValores";
+
+                            $.ajax({
+                                type: 'POST',
+                                url: strUrl,
+                                dataType: "json",
+                                data: dataForm,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (response) {
+                                    closeNotify();
+                                    showSuccess("Transacción exitosa. Espere por favor...");
+
+                                    if (response.usuario != null && !response.existeUser) {
+
+                                        var nombres = response.usuario.use_name;
+                                        var apellidos = response.usuario.use_lastName;
+                                        var email = response.usuario.use_mail;
+                                        var cargo = response.usuario.use_charge;
+                                        var username = response.usuario.use_user;
+
+                                        $("#error").addClass("d-none");
+                                        $("#datos_usuario").removeClass("d-none");
+                                        $("#id_gb").attr("value", response.usuario.use_id);
+                                        $("#documento").attr("value", response.usuario.use_identification);
+                                        $("#nombres").attr("value", nombres);
+                                        $("#nombres").attr("placeholder", nombres);
+                                        $("#apellidos").attr("value", apellidos);
+                                        $("#apellidos").attr("placeholder", apellidos);
+                                        $("#email").attr("value", email);
+                                        $("#email").attr("placeholder", email);
+                                        $("#username").attr("value", username);
+                                        $("#username").attr("placeholder", username);
+                                        $("#cargo").attr("value", cargo);
+                                        $("#cargo").attr("placeholder", cargo);
+
+                                    } else {
+                                      if(response.existeUser)
+                                      {
+                                        $("#datos_usuario").addClass("d-none");
+                                        $("#error").removeClass("d-none");
+                                        $("#error").html("El usuario ya se encuentra importado en el sistema.");
+                                      }
+                                      else{
+                                         $("#datos_usuario").addClass("d-none");
+                                        $("#error").removeClass("d-none");
+                                        $("#error").html("El usuario no existe");
+                                      }
+                                        
+                                    }
+                                }
+                            });
+                
+            }   
+        }
+        else {
+            showError("Por favor revise los campos marcados." + msjError);
+        }
+    }
+
+    function guardarUsuario() {
+
+        validateForm("datos_usuario");
+
+        var msjError = "";
+
+        if ($("#datos_usuario").valid() && msjError == "") {
+
+            showLoading("Enviando información. Espere por favor...");
+            var strUrl   = pathToAction() + "/User/guardarUsuario";
+            var dataForm = new FormData(document.getElementById("datos_usuario"));
+
+            $.ajax({
+                type: 'POST',
+                url: strUrl,
+                dataType: "json",
+                data: dataForm,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    closeNotify();
+                    showSuccess("Transacción exitosa. Espere por favor...");
+                    loadUsuarios();
+                }
+            });
+        }
+        else {
+            showError("Por favor revise los campos marcados." + msjError);
+        }
+    }
+
+</script>
+<style>
+
+</style>
+<div class="row justify-content-md-center" style="margin-top:10px;">
+    <div class="panel panel-bordered-primary col-md-10 panel-interno">
+        <div class="panel-body panel-custom-interno">
+            Registro de usuarios
+            <div class="cerrar_form" onclick="loadUsuarios();" title="Volver"><i class="fa fa-reply fa-lg"></i></div>
+            <hr />
+            <form id="datos_buscador" name="datos_buscador" action="" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label class="mb-0">Documento:</label>
+                        @Html.TextBox("buscar_documento", "", new { @class = "form-control", @type = "number" })
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="mb-0">Email:</label>
+                        @Html.TextBox("buscar_email", "", new { @class = "form-control no_mayus", @type = "email" })
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="mb-0">Usuario:</label>
+                        @Html.TextBox("buscar_usuario", "", new { @class = "form-control no_mayus", @type = "text" })
+                    </div>
+                    <div class="col-sm-3 align-self-end">
+                        <input type="button" value="Consultar" class="btn btn-primary datos_proceso_btnSave" onclick="buscarUsuario();">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <div class="row">
+                    <div class="col-12">
+                        <div id="error" class="alert alert-danger d-none"></div>
+                    </div>
+                </div>
+            </form>
+            <form id="datos_usuario" name="datos_usuario" action="" method="post" enctype="multipart/form-data" class="d-none">
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <hr />
+                <div class="row">
+                    <input id="id_gb"     name="id_gb"     type="hidden" />
+                    <input id="documento" name="documento" type="hidden" />
+                    <div class="col-md-3">
+                        <label class="mb-0">Nombres:</label>
+                        <input id="nombres" name="nombres" class="form-control" type="text" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Apellidos:</label>
+                        <input id="apellidos" name="apellidos" class="form-control" type="text" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Email:</label>
+                        <input id="email" name="email" class="form-control no_mayus" type="text" readonly />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Nombre de usuario:</label>
+                        <input id="username" name="username" class="form-control no_mayus" type="text" readonly />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="mb-0">Cargo:</label>
+                        <input id="cargo" name="cargo" class="form-control required" type="text" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Código SF:</label>
+                        @Html.TextBox("codigo_sf", "", new { @class = "form-control", @maxlength = "150" })
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Código CW:</label>
+                        @Html.TextBox("codigo_cw", "", new { @class = "form-control", @maxlength = "50" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="mb-0">Compañía:</label>
+                        <div class="form-group">
+                            @Html.DropDownList("id_compania", new SelectList(Model.Companias, "ID_COMPANY", "NAME", null), "Seleccione uno...", new { @class = "form-control required" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">¿Cambia compañia?:</label>
+                        <br />
+                        @Html.RadioButtonList("permite_cambio_pais", RadioButtonListExtensions.TipoLista.SiNo, true, "")
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Branch:</label>
+                        <br />
+                        <div class="">
+                            @Html.TextBox("branch", "", new { @class = "form-control required", @maxlength = "50" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <div class="row" style="height:10px;">&nbsp;</div>
+                <center>
+                    <input type="button" value="Importar" class="btn btn-primary datos_proceso_btnSave" onclick="guardarUsuario();">
+                </center>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
