@@ -18,11 +18,13 @@ namespace LD.Services.Users
         private readonly IRepositoryUserGB _repositoryUserGB;
         private readonly IRepositoryUserLD _repositoryUserLD;
         private readonly IRepositorySalesSupport _repositorySalesSupport;
-        public UserService(IRepositoryUserGB repositoryUser, IRepositoryUserLD repositoryLD, IRepositorySalesSupport repositorySalesSupport)
+        private readonly IRepositoryUserCOT _repositoryUserCOT;
+        public UserService(IRepositoryUserGB repositoryUser, IRepositoryUserLD repositoryLD, IRepositorySalesSupport repositorySalesSupport, IRepositoryUserCOT repositoryUserCOT)
         {
             _repositoryUserGB = repositoryUser;
             _repositoryUserLD = repositoryLD;
             _repositorySalesSupport = repositorySalesSupport;
+            _repositoryUserCOT = repositoryUserCOT;
         }
 
         protected override void ValidationsToCreate(GB_user entity)
@@ -93,22 +95,22 @@ namespace LD.Services.Users
         public USERDto obtenerUsuarioPorID(int idUser)
         {
             USERDto user = new USERDto();
-            var userLD = _repositoryUserLD.obtenerUsuarioLDPorID(idUser);
-            if (userLD != null)
+            var userGB = _repositoryUserGB.obtenerUsuarioPorId(idUser);            
+            if (userGB != null)
             {
-                var userGB = _repositoryUserGB.obtenerUsuarioPorId(userLD.ID_USER_BLU);
+                var userCT = this.obtenerUsuarioCOTPorID(idUser);
                 user.ID_USER = userGB.use_id;
-                user.ID_USER_CW = userLD.ID_USER_CW;
-                user.ID_USER_SF = userLD.ID_USER_SF;
-                user.BRANCH = userLD.BRANCH;
-                user.CHANGE_COUNTRY = userLD.CHANGE_COUNTRY;
+                user.ID_USER_CW = userCT!=null?userCT.ID_USER_CW:"";
+                user.ID_USER_SF = userCT != null ? userCT.ID_USER_SF:"";
+                user.BRANCH = userCT != null ? userCT.BRANCH:"";
+                user.CHANGE_COUNTRY = userCT != null? userCT.CHANGE_COUNTRY:false;
                 user.DOCUMENT_NUMBER = userGB.use_identification.ToString();
                 user.EMAIL = userGB.use_mail;
                 user.FIRST_NAME = userGB.use_name;
                 user.LAST_NAME = userGB.use_lastName;
-                user.POSITION = userLD.POSITION;
-                user.ID_COMPANY = userLD.ID_COMPANY;
-                user.COMPANY_NAME = userLD.ID_COMPANYNavigation.NAME;
+                user.POSITION = userCT != null ? userCT.POSITION:"";
+                user.ID_COMPANY = userCT != null ? userCT.ID_COMPANY:0;
+                //user.COMPANY_NAME = userCT.ID_COMPANYNavigation.NAME;
                 user.IS_ACTIVE = userGB.use_active;
                 user.USERNAME = userGB.use_name;
             }
@@ -155,17 +157,17 @@ namespace LD.Services.Users
         {
             string[] nombreRoles = new string[] { rol };
             List<USERDto> lisUsuariosDto = new List<USERDto>();
-            var lisUsuariosLD = this.obtenerUsuarios().Where(w=>w.ID_COMPANY == idCompania);
-            if (lisUsuariosLD.Any())
-            {
+            //var lisUsuariosLD = this.obtenerUsuarios().Where(w=>w.ID_COMPANY == idCompania);
+            //if (lisUsuariosLD.Any())
+            //{
                 var lisUsuarios = this.obtenerUsuariosPorRol(nombreRoles);
                 if (lisUsuarios.Any())
                 {
-                    var SelectUsariosLD = (from u in lisUsuarios
-                                          join usld in lisUsuariosLD on u.use_id equals usld.ID_USER
-                                          where (u.use.use_name.ToLower().Contains(filtro.ToLower()) || u.use.use_lastName.ToLower().Contains(filtro.ToLower()))
-                                           select u).ToList();
-                    foreach (var us in SelectUsariosLD)
+                var SelectUsariosLD = (from u in lisUsuarios
+                                       //join usld in lisUsuariosLD on u.use_id equals usld.ID_USER
+                                       where (u.use.use_name.ToLower().Contains(filtro.ToLower()) || u.use.use_lastName.ToLower().Contains(filtro.ToLower()))
+                                       select u).ToList();
+                foreach (var us in SelectUsariosLD)
                     {
                         USERDto user = new USERDto();
                         user.USERNAME = us.use.use_name + " " + us.use.use_lastName;
@@ -174,7 +176,7 @@ namespace LD.Services.Users
                         lisUsuariosDto.Add(user);
                     }
                 }
-            }            
+            //}            
             return lisUsuariosDto;
         }
         public List<USERDto> obtenerComercialesPorSaleSupport(int idUser)
@@ -191,19 +193,46 @@ namespace LD.Services.Users
             }
             foreach (var u in listUsuariosGB)
             {
-                var userLD = _repositoryUserLD.obtenerUsuarioLDPorID(u.use_id);
-                if (userLD != null)
-                {
                     USERDto user = new USERDto();
                     user.ID_USER = u.use_id;
                     user.FIRST_NAME = u.use_name;
                     user.LAST_NAME = u.use_lastName;
-                    user.ID_USER_SF = userLD.ID_USER_SF;
                     listComerciales.Add(user);
-                }
             }
 
             return listComerciales;
+        }
+        public USERS_APPS obtenerUsuarioCOTPorID(int idUser)
+        {
+            return _repositoryUserCOT.obtenerUsuarioCOTPorID(idUser);
+        }
+        public USERS_APPS obtenerUsuarioCOTPorSF(string UserSF)
+        {
+            return _repositoryUserCOT.obtenerUsuarioCOTPorSF(UserSF);
+        }
+
+        public List<USERDto> obtenerSaleSupportPorComercial(int idUser)
+        {
+            List<SALES_SUPPORTS> listSaleSupportComercial = new List<SALES_SUPPORTS>();
+            List<GB_user> listUsuariosGB = new List<GB_user>();
+            List<USERDto> listSaleSupport = new List<USERDto>();
+
+            listSaleSupportComercial = _repositorySalesSupport.obtenerSaleSupportPorComercial(idUser);
+            if (listSaleSupportComercial.Any())
+            {
+                var idsSaleSupport = listSaleSupportComercial.Select(s => (int)s.ID_SALE_SUPPORT).ToList();
+                listUsuariosGB = _repositoryUserGB.obtenerUsuarios(idsSaleSupport);
+            }
+            foreach (var u in listUsuariosGB)
+            {
+                    USERDto user = new USERDto();
+                    user.ID_USER = u.use_id;
+                    user.FIRST_NAME = u.use_name;
+                    user.LAST_NAME = u.use_lastName;
+                    listSaleSupport.Add(user);
+            }
+
+            return listSaleSupport;
         }
     }
 }

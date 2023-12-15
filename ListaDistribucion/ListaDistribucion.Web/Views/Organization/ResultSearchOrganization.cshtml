@@ -1,38 +1,40 @@
 ﻿@model ListaDistribucion.Web.Models.Organization.OrganizationModel
-@{ Layout = null; }
+@{
+    Layout = null;
+}
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-        oTable = $('#list_buscador').dataTable({
-            "pagingType": "full_numbers", "bStateSave": false, "iDisplayLength": 50,
-            "bSort": false
-        });
+    oTable = $('#list_buscador').dataTable({
+    "pagingType": "full_numbers", "bStateSave": false, "iDisplayLength": 50,
+    "bSort": false
+    });
     });
 
     function verDetalleCliente(cliente) {
 
-        var objData = validarRegistrosSeleccionados('check_customer');
+    var objData = validarRegistrosSeleccionados('check_customer');
 
-        //////if (objData.idRegistroSeleccionado != 0) {
+    //////if (objData.idRegistroSeleccionado != 0) {
 
-            loader();
+    loader();
 
-            $("#content_integracion").load(pathToAction() + '/Organization/ViewOrganization', { idCliente: cliente }, function () {
-                loader();
-                $(".buscador").hide();
-                $(".titulo_resultado_busqueda").hide();
-                $("#integraciones .content_menu_grilla").hide();
-            });
-        //}
-        //else
-        //    showError("Debe seleccionar un registro para realizar la operación");
+    $("#content_integracion").load(pathToAction() + '/Organization/ViewOrganization', { idCliente: cliente }, function () {
+    loader();
+    $(".buscador").hide();
+    $(".titulo_resultado_busqueda").hide();
+    $("#integraciones .content_menu_grilla").hide();
+    });
+    //}
+    //else
+    //    showError("Debe seleccionar un registro para realizar la operación");
     }
 
 </script>
 <style>
     .table hr {
-        margin: unset !important;
+    margin: unset !important;
     }
 </style>
 <div class="row-fluid panel_buscador">
@@ -69,7 +71,14 @@
                             <td>@org.NAME.Replace("_", " ")</td>
                             <td>@org.IDENTIFICACION</td>
                             <td>@org.COMERCIAL</td>
-                            <td>@org.SALESUPPORT</td>
+                            <td>
+                                <ul>
+                                    @foreach (var name in @org.SALESUPPORT)
+                                    {
+                                      <li>@name</li>
+                                    }
+                              </ul>                                                         
+                            </td>
                             <td>@org.EJECUTIVO</td>
                             <td>
                                 <center>

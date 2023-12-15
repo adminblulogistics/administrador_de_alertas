@@ -20,5 +20,9 @@ namespace LD.Repositories
         {
             return _dbContext.SALES_SUPPORTS.Where(w => w.ID_SALE_SUPPORT == idUser).ToList();
         }
+        public List<SALES_SUPPORTS> obtenerSaleSupportPorComercial(int idUser)
+        {
+            return _dbContext.SALES_SUPPORTS.Where(w => w.ID_COMERCIAL == idUser).ToList();
+        }
     }
 }

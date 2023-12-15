@@ -1,4 +1,5 @@
-﻿using LD.EntitiesLD;
+﻿using LD.Entities;
+using LD.EntitiesLD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,10 @@ namespace LD.Services.Interfaces.Alarms
     public interface IAlarmService
     {
         List<ALARMS> obtenerAlarmas();
-        List<CONTACT_ALARMS> obtenerAlarmasPorContact(int idContact);
-        List<CONTACT_ALARMS> insertAlarmaContacto(CONTACT_ALARMS ContactAlarma);
+        List<CONTACT_ALARMS> obtenerAlarmasPorContact(long idContact);
+        Respuesta insertAlarmaContacto(CONTACT_ALARMS ContactAlarma);
+        ALARMS obtenerAlarmaPorId(int id);
+        Respuesta eliminarAlarmasPorContacto(long id);
+        Respuesta eliminarAlarmasPorOrganizacionContacto(long id);
     }
 }

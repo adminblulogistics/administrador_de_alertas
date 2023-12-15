@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LinqToExcel" Version="1.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LD.Integration.SaleForce\LD.Integrations.csproj" />
     <ProjectReference Include="..\LD.Utilities\LD.Utilities.csproj" />
     <ProjectReference Include="..\Repositories\LD.Repositories.csproj" />

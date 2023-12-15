@@ -13,5 +13,6 @@ namespace LD.Repositories.Interfaces
         ADDITIONAL_ORGANIZATION_INFORMATION obtenerInfoAdicionalLDPorID(long id);
         Respuesta insertarInfoAdicionalLD(ADDITIONAL_ORGANIZATION_INFORMATION orgInfoAdd);
         Respuesta actualizarInfoAdicionalLD(ADDITIONAL_ORGANIZATION_INFORMATION orgInfoAdd);
+        ADDITIONAL_ORGANIZATION_INFORMATION obtenerInfoAdicionalLDPorIDEjecutivo(int id);
     }
 }

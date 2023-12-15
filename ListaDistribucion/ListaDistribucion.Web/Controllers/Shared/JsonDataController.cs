@@ -17,7 +17,7 @@ namespace ListaDistribucion.Web.Controllers.Shared
             string filtro = Request.Query["f"];
             int idCompania = Convert.ToInt32(HttpContext.Session.GetInt32("IdCompania"));
 
-            List<USERDto> listado = _userService.obtenerUsuariosPorRol(Enum.GetName(typeof(Enumeraciones.PerfilesModulo), Enumeraciones.PerfilesModulo.AA_Comercial).Replace("_", " "),filtro, idCompania);
+            List<USERDto> listado = _userService.obtenerUsuariosPorRol(Enum.GetName(typeof(Enumeraciones.PerfilesModulo), Enumeraciones.PerfilesModulo.Comercial),filtro, idCompania);
 
             var listadoTemp =
                 (
@@ -37,7 +37,7 @@ namespace ListaDistribucion.Web.Controllers.Shared
             string filtro = Request.Query["f"];
             int idCompania = Convert.ToInt32(HttpContext.Session.GetInt32("IdCompania"));
 
-            List<USERDto> listado = _userService.obtenerUsuariosPorRol(Enum.GetName(typeof(Enumeraciones.PerfilesModulo), Enumeraciones.PerfilesModulo.AA_Sales_Support).Replace("_", " "), filtro, idCompania);
+            List<USERDto> listado = _userService.obtenerUsuariosPorRol(Enum.GetName(typeof(Enumeraciones.PerfilesModulo), Enumeraciones.PerfilesModulo.SaleSupport), filtro, idCompania);
 
             var listadoTemp =
                 (

@@ -36,6 +36,11 @@ namespace LD.Repositories
             ADDITIONAL_ORGANIZATION_INFORMATION org = _dbContext.ADDITIONAL_ORGANIZATION_INFORMATION.Where(w=>w.ID_ORGANIZATION_BODEGA == id).FirstOrDefault();
             return org;
         }
+        public ADDITIONAL_ORGANIZATION_INFORMATION obtenerInfoAdicionalLDPorIDEjecutivo(int id)
+        {
+            ADDITIONAL_ORGANIZATION_INFORMATION org = _dbContext.ADDITIONAL_ORGANIZATION_INFORMATION.Where(w => w.ID_SERVICE_CLIENT == id).FirstOrDefault();
+            return org;
+        }
 
         public Respuesta actualizarInfoAdicionalLD(ADDITIONAL_ORGANIZATION_INFORMATION orgInfoAdd)
         {

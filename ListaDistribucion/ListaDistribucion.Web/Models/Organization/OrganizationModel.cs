@@ -1,4 +1,5 @@
-﻿using LD.Entities.Dtos;
+﻿using LD.Entities;
+using LD.Entities.Dtos;
 using LD.EntitiesLD;
 
 namespace ListaDistribucion.Web.Models.Organization
@@ -13,5 +14,6 @@ namespace ListaDistribucion.Web.Models.Organization
         public List<ALARMS> ListAlarms { get; set; }
         public CONTACTS Contacto { get; set; }
         public ORGANIZATIONDto Organizacion { get; set; }
+        public Respuesta ResultadoArchivoProcesado { set; get; }
     }
 }

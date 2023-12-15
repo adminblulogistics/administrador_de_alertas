@@ -11,7 +11,10 @@ namespace LD.Repositories.Interfaces
     public interface IRepositoryAlarm
     {
         List<ALARMS> obtenerAlarmas();
-        List<CONTACT_ALARMS> obtenerAlarmasPorContact(int idContact);
+        List<CONTACT_ALARMS> obtenerAlarmasPorContact(long idContact);
         Respuesta insertAlarmaContacto(CONTACT_ALARMS ContactAlarma);
+        ALARMS obtenerAlarmaPorId(int id);
+        Respuesta eliminarAlarmasPorContacto(long id);
+        Respuesta eliminarAlarmasPorOrganizacionContacto(long id);
     }
 }

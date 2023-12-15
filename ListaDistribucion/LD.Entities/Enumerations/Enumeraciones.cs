@@ -31,6 +31,8 @@ namespace LD.Entities.Enumerations
             AA_Lider_Operaciones = 185,
             AA_Administración = 186,
             AA_Supervisor = 187,
+            Comercial = 144,
+            SaleSupport = 147,
         }
     }
 }

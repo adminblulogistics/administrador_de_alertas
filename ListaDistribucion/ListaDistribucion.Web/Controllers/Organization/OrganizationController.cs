@@ -31,12 +31,13 @@ namespace ListaDistribucion.Web.Controllers.Organization
         public IActionResult Index()
         {
             int idUsuario = Convert.ToInt32(HttpContext.Session.GetInt32("IdUsuario"));
-            string rolUsuario = HttpContext.Session.GetString("Rol");
+            int idComerciales = 0;
+            int idsalesSupport = 0;
+            int idEjecutivos = 0;
             List<ORGANIZATIONDto> listaorganizaciones = new List<ORGANIZATIONDto>();
 
-            var user = _userService.obtenerUsuarioLDPorID(idUsuario);
-            if (user != null)
-                listaorganizaciones = _organizationService.obtenerOrganizacionesPorUsuario(user, rolUsuario);
+            listaorganizaciones = _organizationService.obtenerOrganizacionesPorUsuario(idComerciales, idsalesSupport, idEjecutivos, idUsuario);
+
             var model = new OrganizationModel
             {
                 Listaorganizaciones = listaorganizaciones
@@ -46,28 +47,18 @@ namespace ListaDistribucion.Web.Controllers.Organization
         public IActionResult searchOrganization()
         {
             int idCompania = Convert.ToInt32(HttpContext.Session.GetInt32("IdCompania"));
-            string comerciales = Request.Form["comercialId"];
-            string salesSupport = Request.Form["salesupportId"];
-            string ejecutivos = Request.Form["ejecutivoId"];
+            int idComerciales = Convert.ToInt32(!string.IsNullOrEmpty(Request.Form["comercialId"])? Request.Form["comercialId"].ToString() : 0);
+            int idsalesSupport = Convert.ToInt32(!string.IsNullOrEmpty(Request.Form["salesupportId"]) ? Request.Form["salesupportId"].ToString() : 0);
+            int idEjecutivos = Convert.ToInt32(!string.IsNullOrEmpty(Request.Form["ejecutivoId"]) ? Request.Form["ejecutivoId"].ToString() : 0);
+
             int idUsuario = Convert.ToInt32(HttpContext.Session.GetInt32("IdUsuario"));
             string rol = HttpContext.Session.GetString("Rol");
-            List<ORGANIZATIONDto> listaorganizaciones = new List<ORGANIZATIONDto>();
-            var user = _userService.obtenerUsuarioLDPorID(idUsuario);
-            if (user != null)
-               listaorganizaciones = _organizationService.obtenerOrganizacionesPorUsuario(user, rol);
 
-            if (comerciales != null)
-            {
-                HttpContext.Session.SetString("comerciales", comerciales);
-            }
-            if (salesSupport != null)
-            {
-                HttpContext.Session.SetString("salesSupport", salesSupport);
-            }
-            if (ejecutivos != null)
-            {
-                HttpContext.Session.SetString("ejecutivos", ejecutivos);
-            }
+
+            List<ORGANIZATIONDto> listaorganizaciones = new List<ORGANIZATIONDto>();
+            listaorganizaciones = _organizationService.obtenerOrganizacionesPorUsuario(idComerciales, idsalesSupport, idEjecutivos, idUsuario);
+            if(!listaorganizaciones.Any())
+                listaorganizaciones = new List<ORGANIZATIONDto>();
 
             OrganizationModel model = new OrganizationModel()
             {
@@ -167,6 +158,43 @@ namespace ListaDistribucion.Web.Controllers.Organization
             };
 
             return View("~/Views/Organization/ContactAlarmsModal.cshtml", model);
+        }
+        public JsonResult saveContactAlarm()
+        {
+            int idContactoOrg = Convert.ToInt32(Request.Form["idContactoOrg"]);
+            var contacto = _contactService.ObtenerContactoPorId(idContactoOrg);
+            Respuesta respuesta = new Respuesta();
+            //respuesta = _alarmService.insertAlarma(contacto);
+
+            return Json(new { success = respuesta.ProcesoExitoso });
+        }
+        public IActionResult UpdateMasivo()
+        {
+            OrganizationModel model = new OrganizationModel()
+            {               
+            };
+            return View("~/Views/Organization/LoadExcelMasivo.cshtml", model);
+        }
+        public IActionResult ProcessExcel(IFormFile archivo)
+        {
+            Respuesta respuesta = new Respuesta();
+            List<string> errores = new List<string>();
+
+            if (archivo.Length > 0)
+            {
+                respuesta = _organizationService.ValidarExcelMasivo(archivo);
+            }
+            else
+            {
+                errores.Add("No ha seleccionado ningún archivo");
+            }
+
+            var model = new OrganizationModel
+            {
+                ResultadoArchivoProcesado = respuesta
+            };
+
+            return View("~/Views/Organization/ResultProcesarExcelMasivo.cshtml", model);
         }
     }
 }

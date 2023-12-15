@@ -59,26 +59,25 @@
             <form id="resultadoAlarm" name="datos_informacion_alarms" action="" method="post" enctype="multipart/form-data">
                 <div id="alarmas" style="clear: both;">
                     <div class="" id="content_alarm">
-                                    <table id="list_datos" class="table table-sm table-striped table-bordered dt-responsive" cellspacing="0" style="width:100%;">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            @foreach (var al in Model.ListAlarms)
-                                            {
-                                                <tr>
-                                                  <td>@al.NAME</td>
-                                                   <td>
-                                                        <input class="float-left mr-1" type="checkbox" name="check_alarm" value="@al.ID_ALARM">
-                                                   </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
+                          <table id="list_datos" class="table table-sm table-striped table-bordered dt-responsive" cellspacing="0" style="width:100%;">
+                              <thead>
+                                  <tr>
+                                      <th>Nombre</th>
+                                      <th></th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  @foreach (var al in Model.ListAlarms)
+                                  {
+                                      <tr>
+                                        <td>@al.NAME</td>
+                                          <td>
+                                              <input class="float-left mr-1" type="checkbox" name="check_alarm" value="@al.ID_ALARM">
+                                          </td>
+                                      </tr>
+                                  }
+                              </tbody>
+                          </table>
 @*                        <div class="row col-md-12" style="height:10px;">&nbsp;</div>*@
                     </div>
                 </div>

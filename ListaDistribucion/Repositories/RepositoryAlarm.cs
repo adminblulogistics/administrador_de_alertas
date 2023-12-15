@@ -22,7 +22,7 @@ namespace LD.Repositories
             return _dbContext.ALARMS.ToList();
         }
 
-        public List<CONTACT_ALARMS> obtenerAlarmasPorContact(int idContact)
+        public List<CONTACT_ALARMS> obtenerAlarmasPorContact(long idContact)
         {
             return _dbContext.CONTACT_ALARMS.Where(w=>w.ID_CONTACT== idContact).ToList();
         }
@@ -40,5 +40,23 @@ namespace LD.Repositories
             return respuesta;
         }
 
+        public ALARMS obtenerAlarmaPorId(int id)
+        {
+            return _dbContext.ALARMS.Where(w => w.ID_ALARM == id).FirstOrDefault();
+        }
+        public Respuesta eliminarAlarmasPorContacto(long id)
+        {
+            _dbContext.CONTACT_ALARMS.RemoveRange(_dbContext.CONTACT_ALARMS.Where(w => w.ID_CONTACT == id));
+            _dbContext.SaveChanges();
+            Respuesta respuesta = new Respuesta { ProcesoExitoso = true };
+            return respuesta;
+        }
+        public Respuesta eliminarAlarmasPorOrganizacionContacto(long id)
+        {
+            _dbContext.CONTACT_ALARMS.RemoveRange(_dbContext.CONTACT_ALARMS.Where(w => w.ID_ORGANIZATION == id));
+            _dbContext.SaveChanges();
+            Respuesta respuesta = new Respuesta { ProcesoExitoso = true };
+            return respuesta;
+        }
     }
 }

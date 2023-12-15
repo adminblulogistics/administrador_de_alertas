@@ -15,5 +15,7 @@ namespace LD.Repositories.Interfaces
         Respuesta actualizarContacto(CONTACTS contacto);
         Respuesta insertarContacto(CONTACTS contacto);
         Respuesta eliminarContacto(CONTACTS contacto);
+        Respuesta validarContactoExistente(CONTACTS contacto);
+        Respuesta eliminarContactosPorOrganizacion(int id);
     }
 }

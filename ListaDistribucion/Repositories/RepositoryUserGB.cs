@@ -88,7 +88,7 @@ namespace LD.Repositories
             List<GB_userRole> roles = (
                     from rol in _dbContext.GB_role
                     join userRol in _dbContext.GB_userRole on rol.rol_id equals userRol.rol_id
-                    where rol.rol_initials.StartsWith("listdis_") && (nombreRoles.Contains(rol.rol_name))
+                    where rol.rol_initials.StartsWith("cot_") && (nombreRoles.Contains(rol.rol_name))
                     select userRol
                 ).Include(i=>i.use).ToList();
 

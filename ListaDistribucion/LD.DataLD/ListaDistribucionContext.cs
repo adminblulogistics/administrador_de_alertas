@@ -154,16 +154,9 @@ public partial class ListaDistribucionContext : DbContext
             entity.Property(e => e.DOCUMENTTYPE)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.DOMINGO).HasDefaultValueSql("((0))");
             entity.Property(e => e.EVENTCODE)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.JUEVES).HasDefaultValueSql("((1))");
-            entity.Property(e => e.LUNES).HasDefaultValueSql("((0))");
-            entity.Property(e => e.MARTES).HasDefaultValueSql("((1))");
-            entity.Property(e => e.MIERCOLES).HasDefaultValueSql("((1))");
-            entity.Property(e => e.SABADO).HasDefaultValueSql("((0))");
-            entity.Property(e => e.VIERENES).HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<INSTRUCTIVE>(entity =>

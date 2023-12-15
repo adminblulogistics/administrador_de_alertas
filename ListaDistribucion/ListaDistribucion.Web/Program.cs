@@ -17,11 +17,15 @@ using LD.Services.Interfaces.Companys;
 using LD.Services.Interfaces.Contact;
 using LD.Services.Interfaces.Instructives;
 using LD.Services.Interfaces.Integration;
+using LD.Services.Interfaces.Notifications;
 using LD.Services.Interfaces.Organizations;
 using LD.Services.Interfaces.Parameters;
+using LD.Services.Interfaces.SendEmails;
 using LD.Services.Interfaces.Users;
+using LD.Services.Notifications;
 using LD.Services.Organizations;
 using LD.Services.Parameters;
+using LD.Services.SendEmails;
 using LD.Services.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -46,6 +50,8 @@ builder.Services.AddScoped<IRepositoryCustomerCT,RepositoryCustomerCT>();
 builder.Services.AddScoped<IRepositoryContact, RepositoryContact>();
 builder.Services.AddScoped<IRepositorySalesSupport, RepositorySalesSupport>();
 builder.Services.AddScoped<IRepositoryAlarm, RepositoryAlarm>();
+builder.Services.AddScoped<IRepositoryUserCOT, RepositoryUserCOT>();
+
 builder.Services.AddScoped<IInstructiveService, InstructiveService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IParametersService, ParametersService>();
@@ -56,6 +62,8 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IContactService, ContactService>(); 
 builder.Services.AddScoped<IAlarmService, AlarmService>();
+builder.Services.AddScoped<INotificationsService, NotificationsService>();
+builder.Services.AddScoped<ISendEmailsService, SendEmailsService>();
 
 
 builder.Services.AddSession(options => {

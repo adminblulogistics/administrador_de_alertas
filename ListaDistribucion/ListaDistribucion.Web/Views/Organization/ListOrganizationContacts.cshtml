@@ -69,6 +69,7 @@
             dataType: "json",
             data: { idContacto: idcontacto },
             success: function (response) {
+              debugger;
                 closeNotify();
                 $("#resultVista").html(response);
                 $('#resultVista').modal('toggle');

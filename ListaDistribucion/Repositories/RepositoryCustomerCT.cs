@@ -36,5 +36,14 @@ namespace LD.Repositories
             CUSTOMERS cliente = _dbContext.CUSTOMERS.Where(x => x.ID_CUSTOMER == id).FirstOrDefault();
             return cliente;
         }
+        public bool validarExistenciaOrganizacion(long id)
+        {
+            bool existe = false;
+            CUSTOMERS cliente = _dbContext.CUSTOMERS.Where(x => x.ID_CUSTOMER == id).FirstOrDefault();
+
+            if(cliente!=null)
+                existe = true;
+            return existe;
+        }
     }
 }

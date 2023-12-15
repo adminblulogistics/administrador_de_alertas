@@ -1,4 +1,5 @@
-﻿using LD.EntitiesLD;
+﻿using LD.Entities;
+using LD.EntitiesLD;
 using LD.Repositories.Interfaces;
 using LD.Services.Interfaces.Alarms;
 using System;
@@ -17,19 +18,33 @@ namespace LD.Services.Alarms
             _repositoryAlarm = repositoryAlarm;
         }
 
-        public List<CONTACT_ALARMS> insertAlarmaContacto(CONTACT_ALARMS ContactAlarma)
+        public Respuesta insertAlarmaContacto(CONTACT_ALARMS ContactAlarma)
         {
-            throw new NotImplementedException();
+            return _repositoryAlarm.insertAlarmaContacto(ContactAlarma);
         }
 
         public List<ALARMS> obtenerAlarmas()
         {
             return _repositoryAlarm.obtenerAlarmas();
         }
+        public ALARMS obtenerAlarmaPorId(int id)
+        {
+            return _repositoryAlarm.obtenerAlarmaPorId(id);
+        }
 
-        public List<CONTACT_ALARMS> obtenerAlarmasPorContact(int idContact)
+        public List<CONTACT_ALARMS> obtenerAlarmasPorContact(long idContact)
         {
             return _repositoryAlarm.obtenerAlarmasPorContact(idContact);
+        }
+
+        public Respuesta eliminarAlarmasPorContacto(long id)
+        {
+            return _repositoryAlarm.eliminarAlarmasPorContacto(id);
+        }
+
+        public Respuesta eliminarAlarmasPorOrganizacionContacto(long id)
+        {
+            return _repositoryAlarm.eliminarAlarmasPorOrganizacionContacto(id);
         }
     }
 }

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace LD.Repositories.Interfaces
 {
-    public interface IRepositorySalesSupport
+    public interface IRepositoryUserCOT
     {
-        List<SALES_SUPPORTS> obtenerComercialesPorSaleSupport(int idUser);
-        List<SALES_SUPPORTS> obtenerSaleSupportPorComercial(int idUser);
+        USERS_APPS obtenerUsuarioCOTPorID(int idUser);
+        USERS_APPS obtenerUsuarioCOTPorSF(string UserSF);
     }
 }

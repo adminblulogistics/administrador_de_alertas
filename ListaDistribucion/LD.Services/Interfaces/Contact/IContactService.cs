@@ -15,5 +15,7 @@ namespace LD.Services.Interfaces.Contact
         Respuesta insertarContacto(CONTACTS contacto);
         Respuesta actualizarContacto(CONTACTS contacto);
         Respuesta eliminarContacto(CONTACTS contacto);
+        Respuesta eliminarContactosPorOrganizacion(int id);
+        Respuesta validarContactoExistente(CONTACTS contacto);
     }
 }

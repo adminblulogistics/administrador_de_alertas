@@ -47,6 +47,13 @@ namespace LD.Repositories
             Respuesta respuesta = new Respuesta { ProcesoExitoso = true };
             return respuesta;
         }
+        public Respuesta eliminarContactosPorOrganizacion(int id)
+        {
+            _dbContext.CONTACTS.RemoveRange(_dbContext.CONTACTS.Where(w=>w.ID_ORGANIZATION_BODEGA== id));
+            _dbContext.SaveChanges();
+            Respuesta respuesta = new Respuesta { ProcesoExitoso = true };
+            return respuesta;
+        }
 
         public Respuesta insertarContacto(CONTACTS contacto)
         {
@@ -70,6 +77,18 @@ namespace LD.Repositories
         public List<CONTACTS> ObtenerContactosPorOrganizacionId(long id)
         {
             return _dbContext.CONTACTS.Where(w => w.ID_ORGANIZATION_BODEGA == id).ToList();
+        }
+        public Respuesta validarContactoExistente(CONTACTS contacto)
+        {
+            Respuesta respuesta = new Respuesta();
+            var contactoExiste = _dbContext.CONTACTS.Where(w => w.EMAIL_CONTACT == contacto.EMAIL_CONTACT && w.ID_ORGANIZATION_BODEGA == contacto.ID_ORGANIZATION_BODEGA).FirstOrDefault();
+
+            if (contactoExiste != null)
+            {
+                respuesta.ProcesoExitoso = true;
+                respuesta.MensajeRespuesta = "El contacto ya esta registrado";
+            }
+            return respuesta;
         }
     }
 }

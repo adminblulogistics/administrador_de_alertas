@@ -1,0 +1,81 @@
+﻿@model ListaDistribucion.Web.Models.Organization.OrganizationModel
+@{
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        oTableExport = $('#list_resultado').dataTable(
+            {
+                "pagingType": "full_numbers", "iDisplayLength": 50, "bStateSave": true
+            });
+    });
+
+    function verMensaje(idIntegracion) {
+
+        var respuesta = $("#mensaje_error_" + idIntegracion).html();
+
+        var dialog = bootbox.dialog({
+            title: "Respuesta transmisión",
+            message: respuesta
+        });
+        $(".bootbox").show().addClass("show");
+    }
+
+
+</script>
+
+<div class="row-fluid">
+    <div class="col-md-12 bg-primary-custom">
+        <div class="">Resultado de la carga masiva</div>
+    </div>
+</div>
+<div id="" class="" style="clear: both;">
+    <div class="content_menu_grilla">
+
+    </div>
+    <div class="" id="content_resultado">
+        @*@if (Model.ListadoIntegracion != null && Model.ListadoIntegracion.Count() > 0)
+        {
+            <table id="list_resultado" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Fecha creación</th>
+                        <th>Consol</th>
+                        <th>Usuario</th>
+                        <th>Fecha respuesta</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var integracion in Model.ListadoIntegracion)
+                    {
+                        <tr>
+                            <td>@integracion.FECHA_CREACION</td>
+                            <td>@integracion.REFERENCIA1</td>
+                            <td>@integracion.USUARIO_PROCESA</td>
+                            <td>@integracion.FECHA_RESPUESTA</td>
+                            <td align="center">
+                                @integracion.ID_ESTADONavigation.ESTADO
+                                <a href="javascript:verMensaje(@integracion.ID_INTEGRACION);" title="Ver mensaje respuesta"><i class="fa fa-search text-primary"></i></a>
+                                <div id="mensaje_error_@integracion.ID_INTEGRACION" style="display:none;">
+                                    Fecha respuesta: @integracion.FECHA_RESPUESTA<hr/>
+                                    @Html.Raw(integracion.MENSAJE_ERROR)
+                                </div>                            
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }*@
+        @if (Model.ResultadoArchivoProcesado.ProcesoExitoso)
+        {
+            <div class="alert alert-danger">Errores presentados</div>
+            @Model.ResultadoArchivoProcesado.MensajeRespuesta<br />
+            @foreach (var error in (List<string>)Model.ResultadoArchivoProcesado.ObjetoRespuesta)
+            {
+                <span>@error</span><br />
+            }
+        }
+
+    </div>
+</div>

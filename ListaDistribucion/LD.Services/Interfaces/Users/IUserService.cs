@@ -20,7 +20,10 @@ namespace LD.Services.Interfaces.Users
         Respuesta insertarUsuario(ADDITIONAL_USER_INFORMATION usuario);
         Respuesta actualizarUsuario(ADDITIONAL_USER_INFORMATION usuario);
         USERDto obtenerUsuarioPorID(int idUser);
+        USERS_APPS obtenerUsuarioCOTPorID(int idUser);
+        USERS_APPS obtenerUsuarioCOTPorSF(string UserSF);
         List<USERDto> obtenerComercialesPorSaleSupport(int idUser);
+        List<USERDto> obtenerSaleSupportPorComercial(int idUser);
 
         ADDITIONAL_USER_INFORMATION obtenerUsuarioLDPorID(int idUser);
         ADDITIONAL_USER_INFORMATION obtenerUsuarioLDPorAlisasSF(string aliasSaleF);
