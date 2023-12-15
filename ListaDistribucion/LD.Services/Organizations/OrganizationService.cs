@@ -347,12 +347,12 @@ namespace LD.Services.Organizations
                                     if (!validEmail)
                                         errores.Add($"Fila número {fila.REGISTRO_NUMBER} el Email no tiene un formato valido.");
                                 }
-                                if (boolidOrg && validEmail)
-                                {
-                                    var contactoExiste = _contactService.validarContactoExistente(new CONTACTS { EMAIL_CONTACT = fila.EMAIL_CONTACT, ID_ORGANIZATION_BODEGA = idOrg });
-                                    if (contactoExiste.ProcesoExitoso)
-                                        errores.Add($"Fila número {fila.REGISTRO_NUMBER} {contactoExiste.MensajeRespuesta}");
-                                }
+                                //if (boolidOrg && validEmail)
+                                //{
+                                //    var contactoExiste = _contactService.validarContactoExistente(new CONTACTS { EMAIL_CONTACT = fila.EMAIL_CONTACT, ID_ORGANIZATION_BODEGA = idOrg });
+                                //    if (contactoExiste.ProcesoExitoso)
+                                //        errores.Add($"Fila número {fila.REGISTRO_NUMBER} {contactoExiste.MensajeRespuesta}");
+                                //}
                             }
                             //Valida alarmas
                             if (!string.IsNullOrEmpty(fila.ALARMS))
@@ -378,10 +378,18 @@ namespace LD.Services.Organizations
 
                         if (!erroresTotal.Any())
                         {
-                            foreach (var regis in lstregistros)
+                            foreach (var elim in lstregistros)
                             {
+                                respuesta = _alarmService.eliminarAlarmasPorOrganizacionContacto(Convert.ToInt32(elim.ID_ORGANIZATION));
+                                if (respuesta.ProcesoExitoso)
+                                {
+                                    respuesta = _contactService.eliminarContactosPorOrganizacion(Convert.ToInt32(elim.ID_ORGANIZATION));
+                                }
+                            }
+                            foreach (var regis in lstregistros)
+                            {                                                             
                                 var procesar = this.ProcesarExcelMasivo(regis);
-                                contProcesardos++;
+                                contProcesardos++;                                
                                 if (!procesar.ProcesoExitoso)
                                     erroresTotal.Add($"Fila número {regis.REGISTRO_NUMBER} error al insertar registro: {procesar.MensajeRespuesta}");
                             }
