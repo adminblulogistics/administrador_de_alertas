@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LinqToExcel" Version="1.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LD.Integration.SaleForce\LD.Integrations.csproj" />
+    <ProjectReference Include="..\LD.Utilities\LD.Utilities.csproj" />
+    <ProjectReference Include="..\Repositories\LD.Repositories.csproj" />
+  </ItemGroup>
+
+</Project>

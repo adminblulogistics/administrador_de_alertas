@@ -1,0 +1,327 @@
+﻿@model ListaDistribucion.Web.Models.HomeModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>:: BLU Logistics :: Lista Distribucion :@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="~/css/responsive.bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/dataTables.bootstrap.css" />
+    <link rel="stylesheet" href="~/css/autoFill.dataTables.min.css" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/jquery.jNotify.css" />
+    <link rel="stylesheet" href="~/css/jquery.select2.css" />
+    <link rel="stylesheet" href="~/css/tooltipster.bundle.min.css" />
+    <link rel="stylesheet" href="~/css/tooltipster-sideTip-borderless.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script type="text/javascript">
+        history.pushState(null, null, location.href);
+            window.onpopstate = function () {
+            history.go(1);
+        };
+
+        /*$(window).bind('beforeunload', function(e) {
+            return "Unloading this page may lose data. What do you want to do..."
+            e.preventDefault();
+        });*/
+
+        var utcTimeExpireSession = null;
+        function pathToAction() {
+            var pathToAction = '@Url.Content("~")';
+
+            if (pathToAction == "/")
+                pathToAction = "";
+            else
+                pathToAction = pathToAction.substring(0, pathToAction.length - 1);
+
+            return pathToAction;
+        }
+    </script>
+</head>
+<body>
+  <!-- Page Wrapper -->
+    <div id="wrapper">
+      <div id="menu">
+            @{
+                await Html.RenderPartialAsync("~/Views/Menu.cshtml", Model);
+            }
+        </div>
+        <div id="content-wrapper" class="d-flex flex-column">
+          <nav class="navbar navbar-expand navbar-light bg-white topbar mb-3 static-top shadow" style="padding: 0.5rem 0.6rem !important;">
+            <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <!-- Topbar Navbar -->
+                <ul class="navbar-nav ml-auto">
+
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-sm-none">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <!-- Dropdown - Messages -->
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+
+                    <!-- Nav Item - Soporte -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="soporteDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Soporte técnico">
+                            <i class="fas fa-headset fa-2x"></i>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="soporteDropdown">
+                            <h6 class="dropdown-header">
+                                Soporte t&eacute;cnico
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="">
+                                        <i class="fas fa-users fa-2x text-gray-500"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-600">Gesti&oacute;n de usuarios</div>
+                                    <span class="small text-gray-800">
+                                        318 - 299 22 99
+                                    </span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="">
+                                        <i class="fas fa-laptop-medical fa-2x text-gray-500"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-600">Soporte IT</div>
+                                    <span class=" small text-gray-800">
+                                        318 - 299 22 99<br />
+                                        318 - 299 22 99
+                                    </span>
+                                </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                                <div class="mr-3">
+                                    <div class="">
+                                        <i class="fas fa-server fa-2x text-gray-500"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-600">Servidores</div>
+                                    <span class=" small text-gray-800">
+                                        318 - 299 22 99
+                                    </span>
+                                </div>
+                            </a>
+
+                        </div>
+                    </li>
+                    <!-- Nav Item - Alerts -->
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="sesionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Soporte técnico">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                @(Context.Session.GetString("Usuario"))
+                                <br />@Context.Session.GetString("Rol")
+                            </span>
+                            <i class="fas fa-user-circle fa-2x"></i>
+                        </a>
+                        <!-- Dropdown - Alerts -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="sesionDropdown">
+                            <h6 class="dropdown-header">
+                                Sesión
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" href="@Model.urlLogin">
+                                <div class="mr-3">
+                                    <div class="">
+                                        <i class="fas fa-undo fa-2x text-gray-500"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Blunet</div>
+                                </div>
+                            </a>
+                            <!--a class="dropdown-item d-flex align-items-center" href="javascript:logout('@(Model.urlLogout)');"-->
+                            <a class="dropdown-item d-flex align-items-center" href="@(Model.urlLogin)">
+                                <div class="mr-3">
+                                    <div class="">
+                                        <i class="fas fa-power-off fa-2x text-gray-500"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Cerrar sesión</div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+
+                </ul>
+          
+          </nav>
+          <div class="container-fluid" style="margin-bottom:30px;">
+                <div class="row">
+                    <div id="content_breadcrumb" class="col-sm-12 col-md-12">
+                        <ul class="">
+                            <li>
+                                <a href="@Url.Content("https://intranet.blulogistics.net/?dashboard=true")" title="Inicio"><span class='fa fa-home' style="color:#979FA1; "></span> / </a>
+                            </li>
+                            <li class="text-breadcrumb" style=""></li>
+                        </ul>
+                        <!--div style="position:absolute;top:0px;right:0px;">
+                            <iframe src="https://totoro.banrep.gov.co/analytics/saw.dll?Go&Path=%2fshared%2fWebBanco%2fES%2fTasa%20Representativa%20del%20Mercado%2flogin&NQUser=publico&NQPassword=publico123" height="20px" width="500px" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" style="font-size:10px !important;"></iframe>
+                        </div-->
+                    </div>
+
+                    
+                    <div id="content_general" class="container-fluid body-content col-sm-12 col-md-12" style="min-height:80vh;">
+                        
+                        <!--Cerrado de sesión automático-->
+
+                        <div id="msj_session" class="alert alert-success">
+                            Se ha detectado inactividad en el sistema, por su seguridad su sesión se cerrará automáticamente en <b><span id="segundos">120</span></b> segundos. Si desea continuar por favor haga clic <a href="javascript:activarSession(0);">aquí</a>
+                        </div>
+                        
+                        <!--Fin cerrado de sesión automático-->
+
+                        <div id="content">
+                            @RenderBody()
+                        </div>
+                    </div>
+                    
+
+                    <div class="overlayCustom" style="display: none"></div>
+                    <footer class="sticky-footer bg-white">
+                        <div class="container my-auto">
+                            <div class="copyright text-center my-auto">
+                                <span>Copyright &copy; BLUNET @DateTime.Now.Year</span>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+            <!-- End of Footer -->
+        </div>
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+    </div>
+    <div class="text_loading"><i class="fas fa-sync fa-pulse"></i> <i>Procesando <img src="@Url.Content("~/Gallery/blu_logo_blanco.png")" class="img-fluid" style="width:50px;" /></div>
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootbox.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/dataTables.bootstrap.js"></script>
+    <script src="~/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/dataTables.responsive.min.js"></script>
+    <script src="~/js/dataTables.autoFill.min.js"></script>
+    <script src="~/js/jquery.validate.min.js"></script>
+    <script src="~/js/modernizr-2.8.3.js"></script>
+    <script src="~/js/moment.js"></script>
+    <script src="~/js/bootstrap-datetimepicker.js"></script>
+    <script src="~/js/respond.js"></script>
+    <script src="~/js/jquery.select2.js"></script>
+    <script src="~/js/jquery.jNotify.js"></script>
+    <script src="~/js/utilities.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/admin.js"></script>
+    <script src="~/js/tooltipster.bundle.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+    @{
+        var usuarioLogueado = Context.Session.GetString("NombresUsuario");
+        if (usuarioLogueado != null)
+        {
+            DateTime expiresSession = Convert.ToDateTime(Context.Session.GetString("ExpireSession"));
+            <text>
+                <script type="text/javascript">
+                    utcTimeExpireSession = new Date(@expiresSession.Year, (@expiresSession.Month - 1), @expiresSession.Day, @expiresSession.Hour, @expiresSession.Minute);
+                </script>
+            </text>
+            <script src="~/js/validate_activity.js" asp-append-version="true"></script>
+            <text>
+                <script type="text/javascript">
+                    $.ajaxSetup(
+                        {
+                            cache: false,
+                            success: function(data, statusText, jqhxr) {
+
+                            },
+                            fail: function(data, statusText, jqhxr) {
+                                //showError("Se ha presentado un falla. " + data + statusText + jqhxr,5000);
+                            },
+                            error: function(data, statusText, jqhxr) {
+                                //window.location.href = pathToAction() + "/Error/Error?type=500";
+                                //showError("Se ha presentado un error. " + data + statusText + jqhxr,5000);
+                            },
+                            complete: function() {
+                                var d = new Date();
+                                var timeSession = '20';
+                                utcTimeExpireSession = dateAdd(d, 'minute', timeSession);
+                                console.log(utcTimeExpireSession);
+                            }
+                        });
+                </script>
+            </text>
+        }
+    }
+<script>
+    $(document).ready(function () {
+
+        jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+            "numeric-comma-pre": function (a) {
+                var x = (a == "-") ? 0 : a.replace(/\./g, '').replace('$', '').replace(/,/, ".");
+                return parseFloat(x);
+            },
+
+            "numeric-comma-asc": function (a, b) {
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            },
+
+            "numeric-comma-desc": function (a, b) {
+                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+            },
+
+            "date-uk-pre": function (a) {
+                if (a == null || a == "") {
+                    return 0;
+                }
+                var ukDatea = a.split('/');
+                return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+            },
+
+            "date-uk-asc": function (a, b) {
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            },
+
+            "date-uk-desc": function (a, b) {
+                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+            }
+        });
+
+        
+        //$("#dashboard-home").text("Cargando dashboard...");
+        //var url = "/Dashboard";
+        //$("#dashboard-home").load(pathToAction() + url, { }, function () {
+        //});
+
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+﻿@model ListaDistribucion.Web.Models.Organization.OrganizationModel
+@{ Layout = null; }
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        oTableExport = $('#lista_contactos').dataTable({
+            "pagingType": "full_numbers",
+            "iDisplayLength": 100,
+            "bStateSave": true,
+        });
+    });
+
+    function editOrganizationContact(idContacto) {
+
+        var objData = validarRegistrosSeleccionados('check_contacto');
+
+        if (objData.idRegistroSeleccionado != 0 || idContacto == 0) {
+
+            if (idContacto == 0) {
+                objData.idRegistroSeleccionado = 0;
+            }
+
+            loader();
+
+            $("#content_contactos").load(pathToAction() + '/Organization/EditOrganizationContact', { idContacto: objData.idRegistroSeleccionado, idCustomer : @(Model.Organizacion.ID) }, function () {
+                loader();
+                $("#contactos .content_menu_grilla").hide();
+            });
+        }
+        else showError("Debe seleccionar un registro para realizar la operación");
+    }
+
+    function eliminarContactoOrg(idContactoOrg) {
+
+        bootbox.confirm('Usted va a eliminar el registro. El proceso no se podrá deshacer.<br/><br/>¿Desea continuar?', function (result) {
+
+            if (result) {
+
+                showLoading("Enviando información. Espere por favor...");
+
+                var strUrl = pathToAction() + "/Organization/DeteleContact";
+
+                $.ajax({
+                    type: 'POST',
+                    url: strUrl,
+                    dataType: "json",
+                    data: { idContactoOrg: idContactoOrg },
+                    cache: false,
+                    success: function (response) {
+                        closeNotify();
+                        $("#contactos-cliente").load(pathToAction() + '/Organization/ListOrganizationContacts', { idOrganization: @(@Model.Organizacion.ID) }, function () {
+                            showSuccess("Transacción exitosa. Espere por favor...");
+                        });
+                    }
+                });
+            }
+        });
+    }
+    function mostrarModalAlarms(idcontacto) {
+
+        showLoading("Consultando información. Espere por favor...");
+        var strUrl = pathToAction() + "/Organization/ListAlarms";
+
+
+        $.ajax({
+            type: 'POST',
+            url: strUrl,
+            dataType: "json",
+            data: { idContacto: idcontacto },
+            success: function (response) {
+              debugger;
+                closeNotify();
+                $("#resultVista").html(response);
+                $('#resultVista').modal('toggle');
+            }
+        });
+    }
+
+</script>
+
+<div class="row-fluid mt-2">
+    <div class="col-md-12 bg-primary-custom">
+        <div>Información de contactos</div>
+    </div>
+</div>
+
+<div id="contactos" style="clear: both;">
+    <div id="content_contactos" class="">
+        <div class="text-right">
+            <a href="javascript:editOrganizationContact(0)" class="btn btn-success btn-sm" style="margin-top:5px;"> <i class="fa fa-plus-square fa-lg btn-crud"></i> Agregar</a>
+            <a href="javascript:editOrganizationContact()" class="btn btn-primary btn-sm" style="margin-top:5px;"> <i class="fa fa-edit fa-lg btn-crud"></i> Editar</a>&nbsp;
+            <a href="javascript:exportarExcel('lista_contactos', 'Reporte de contactos');" class="btn btn-info btn-sm" style="margin-top:5px;"> <i class="fa fa-file-excel fa-lg btn-crud"></i> Descargar</a>&nbsp;
+        </div>
+        <hr class="mt-1" />
+        <table id="lista_contactos" class="table table-sm table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+            <thead>
+                <tr>
+                    <th class="no-sort"></th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Número de contacto</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ListadoContactos.Count > 0)
+                {
+                    foreach (var contacto in Model.ListadoContactos)
+                    {
+                        <tr>
+                            <td><input type="radio" name="check_contacto" value="@contacto.ID_CONTACT "></td>
+                            <td>@contacto.NAME_CONTACT</td>
+                            <td>@contacto.EMAIL_CONTACT</td>
+                            <td>@contacto.PHONE_CONTACT</td>
+                            <td class="text-center">
+                              <a href="javascript:mostrarModalAlarms(@contacto.ID_CONTACT);" class="text-primary" style="margin-top:5px;">
+                                    <i class="fa fa-th-list"></i>
+                                </a>
+                                <a href="javascript:eliminarContactoOrg(@contacto.ID_CONTACT);" class="text-danger" style="margin-top:5px;">
+                                    <i class="fas fa-trash-alt btn-crud"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else {
+                    <tr>
+                        <td class="text-center" colspan="6">No hay información disponible.</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="resultVista" class="modal" tabindex="-1"></div>

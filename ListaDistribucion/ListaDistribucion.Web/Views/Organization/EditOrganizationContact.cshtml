@@ -1,0 +1,77 @@
+﻿@model ListaDistribucion.Web.Models.Organization.OrganizationModel
+@{ Layout = null; }
+
+
+<script type="text/javascript">
+
+
+    function guardarContacto() {
+
+        validateForm("datos_contacto");
+
+        var msjError = "";
+
+        if ($("#datos_contacto").valid() && msjError == "") {
+
+            loader();
+
+            var strUrl = pathToAction() + "/Organization/SaveContact";
+            var dataForm = new FormData(document.getElementById("datos_contacto"));
+
+            $.ajax({
+                type: 'POST',
+                url: strUrl,
+                dataType: "json",
+                data: dataForm,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) { 
+                  showSuccess("Transacción exitosa. Espere por favor...");
+                        $("#contactos-cliente").load(pathToAction() + '/Organization/ListOrganizationContacts', { idOrganization: @(@Model.Organizacion.ID) }, function () {
+                        loader();
+                    });
+
+                }
+            });
+        }
+    }
+
+</script>
+<div class="" style="margin-top:10px;">
+    <div class="panel panel-interno panel-bordered-primary col-md-12 ">
+        <div class="panel-body panel-custom-interno">
+            Registro de información de contacto
+            <div class="cerrar_form" onclick="cargarContactos()" title="Volver"><i class="fa fa-reply fa-lg"></i></div>
+            <hr />
+            <form id="datos_contacto" name="datos_contacto" action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id_Organizacion" value="@Model.Organizacion.ID" />
+                <input type="hidden" name="id_contacto" value="@Model.Contacto.ID_CONTACT" />
+                <div class="row col-md-12" style="height:10px;">&nbsp;</div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="mb-0">Nombre:</label>
+                        @Html.TextBox("nombre", Model.Contacto.NAME_CONTACT, new { @class = "form-control required", @size = "50" })
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Email:</label>
+                        @Html.TextBox("email", Model.Contacto.EMAIL_CONTACT, new { @class = "form-control required", @size = "50", @type = "email" })
+                    </div>
+                    <div class="col-md-3">
+                        <label class="mb-0">Teléfono:</label>
+                        @Html.TextBox("telefono", Model.Contacto.PHONE_CONTACT, new { @class = "form-control", @size = "50" })
+                    </div>
+                </div>
+                <div class="row" style="height:10px;">&nbsp;</div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-md-3">
+                        <input type="button" value="Guardar" class="btn btn-primary datos_forma_btnSave" onclick="guardarContacto();">
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <div class="row" style="height:10px;">&nbsp;</div>
+            </form>
+        </div>
+    </div>
+</div>

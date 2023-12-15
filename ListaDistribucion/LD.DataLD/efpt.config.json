@@ -1,0 +1,85 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "ListaDistribucionContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "LD.DataLD",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[ACTIVITY_LOG]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ADDITIONAL_ORGANIZATION_INFORMATION]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ADDITIONAL_USER_INFORMATION]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ALARMS]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[COMPANIES]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CONTACT_ALARMS]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CONTACTS]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[INSTRUCTIVE]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[STATUS_ALARMS_LOG]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[STATUS_SEND_TYPE]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SYSTEM_PARAMS]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "swo5cd142mslc.ListaDistribucion.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

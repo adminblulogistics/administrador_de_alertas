@@ -1,0 +1,185 @@
+﻿@model ListaDistribucion.Web.Models.Users.UserModel
+@{ Layout = null; }
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        oTableExport = $('#list_usuarios').dataTable({
+            "pagingType": "full_numbers",
+            "iDisplayLength": 50,
+            "bStateSave": true,
+        });
+
+    });
+
+    function loadUsuarios() {
+
+        loader();
+        $("#content").load(pathToAction() + '/User/Index', {}, function () {
+            loader();
+        });
+    }
+
+    function editUsuario(idUsuario) {
+
+        var objData = validarRegistrosSeleccionados('check_usuario');
+
+        if (objData.idRegistroSeleccionado != 0 || idUsuario == 0) {
+
+            if (idUsuario == 0) {
+                loader();
+                $("#content_usuario").load(pathToAction() + '/User/addUser', function () {
+                    loader();
+                    $("#usuarios .content_menu_grilla").hide();
+                });
+            }
+            else {
+                loader();
+
+                $("#content_usuario").load(pathToAction() + '/User/EditUsuario', { idUsuario: objData.idRegistroSeleccionado }, function () {
+                    loader();
+                    $("#usuarios .content_menu_grilla").hide();
+                });
+            }
+
+            
+        }
+        else
+            showError("Debe seleccionar un registro para realizar la operación");
+    }
+
+    function actualizarAliasSF() {
+
+        var objData = validarRegistrosSeleccionados('check_usuario');
+
+        if (objData.idRegistroSeleccionado != 0) {
+
+            showLoading("Enviando información. Espere por favor...");
+            var strUrl = pathToAction() + "/User/ActualizarAliasSF";
+
+            $.ajax({
+                type: 'POST',
+                url: strUrl,
+                dataType: "json",
+                data: {
+                    id_usuario: objData.idRegistroSeleccionado
+                },
+                cache: false,
+                success: function (response) {
+                    closeNotify();
+                    showSuccess("Transacción exitosa. Espere por favor...");
+                    loadUsuarios();
+                }
+            });
+
+        }
+        else
+            showError("Debe seleccionar un registro para realizar la operación");
+    }
+
+    function actualizarAliasMasivoSF() {
+
+
+        showLoading("Enviando información. Espere por favor...");
+        var strUrl = pathToAction() + "/User/ActualizarAliasMasivoSF";
+
+        $.ajax({
+            type: 'POST',
+            url: strUrl,
+            dataType: "json",
+            data: {},
+            cache: false,
+            success: function (response) {
+                closeNotify();
+                showSuccess("Transacción exitosa. Espere por favor...");
+                loadUsuarios();
+            }
+        });
+
+    }
+
+    
+
+</script>
+
+<div class="row-fluid">
+    <div class="col-md-12 bg-primary-custom">
+        <div class="titulo">Información de usuarios</div>
+    </div>
+</div>
+
+<div id="usuarios" class="container-fluid content-list">
+    <div class="content_menu_grilla">
+        <a href="javascript:editUsuario(0)" class="btn btn-success btn-sm" style="margin-top:5px;"> <i class="fa fa-plus-square fa-lg btn-crud"></i> Agregar</a>&nbsp;
+        <a href="javascript:editUsuario()" class="btn btn-primary btn-sm" style="margin-top:5px;"> <i class="fa fa-edit fa-lg btn-crud"></i> Editar</a>&nbsp;
+        <a href="javascript:actualizarAliasSF()" class="btn btn-info btn-sm" style="margin-top:5px;"> <i class="fa fa- fa-user-check btn-crud"></i> Actualizar alias SF</a>&nbsp;
+        <a href="javascript:actualizarAliasMasivoSF()" class="btn btn-info btn-sm" style="margin-top:5px;"> <i class="fa fa- fa-user-check btn-crud"></i> Actualizar alias SF Masivo</a>&nbsp;
+        <a href="javascript:exportarExcel('list_usuarios', 'Reporte de usuarios');" class="btn btn-info btn-sm" style="margin-top:5px;"> <i class="fa fa-file-excel fa-lg btn-crud"></i> Descargar</a>&nbsp;
+    </div>
+    <div id="content_usuario">
+        <table id="list_usuarios" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+            <thead>
+                <tr>
+                    <th class="no-sort"></th>
+                    <th class="text-right">Id</th>
+                    <th>Id SF</th>
+                    <th>Id CW</th>
+                    <th>Documentos</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Email</th>
+                    <th>Nombre de usuario</th>
+                    <th>Roles</th>
+                    <th>Cargo</th>
+                    <th>Estado</th>
+                    <th>Branch</th>                    
+                    <th>Puede cambiar de país</th>
+                    <th>Pais</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var usuario in Model.ListadoUsuariosLD)
+                {
+                <tr>
+                    <td class="text-center"><input type="radio" name="check_usuario" value="@usuario.ID_USER"></td>
+                    <td class="text-center">@usuario.ID_USER</td>
+                    <td>@usuario.ID_USER_SF</td>
+                    <td>@usuario.ID_USER_CW</td>
+                    <td>@usuario.DOCUMENT_NUMBER</td>
+                    <td>@usuario.FIRST_NAME</td>
+                    <td>@usuario.LAST_NAME</td>
+                    <td>@usuario.EMAIL</td>
+                    <td>@usuario.USERNAME</td>
+                    <td>
+                        <ul>
+                            @{ 
+                                var roles = (
+                                        from rol in Model.ListadoRoles
+                                        join asignacionRol in Model.ListadoAsignacionesRol on rol.rol_id equals asignacionRol.rol_id
+                                        where asignacionRol.use_id == usuario.ID_USER
+                                        select new
+                                        {
+                                            name = rol.rol_name
+                                        }
+                                    ).ToList();
+                            }
+
+                            @foreach(var rol in roles)
+                            {
+                                <li>@rol.name</li>
+                            }
+
+                        </ul>
+                    </td>
+                    <td>@usuario.POSITION</td>
+                    <td>@(usuario.IS_ACTIVE == true ? "ACTIVO" : "INNACTIVO")</td>
+                    <td>@usuario.BRANCH</td>
+                    <td>@(usuario.CHANGE_COUNTRY == true ? "SI" : "NO")</td>
+                    <td>@usuario.COMPANY_NAME</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

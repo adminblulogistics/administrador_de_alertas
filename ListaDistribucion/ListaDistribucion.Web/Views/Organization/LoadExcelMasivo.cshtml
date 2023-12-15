@@ -1,0 +1,104 @@
+﻿@model ListaDistribucion.Web.Models.Organization.OrganizationModel
+@{
+    Layout = null;
+}
+<script type="text/javascript">
+
+    function cargarExcel() {
+
+        validateForm("datos_importar");
+
+        var msjError = "";
+
+        if ($("#datos_importar").valid() && msjError == "") {
+
+            bootbox.confirm({
+                title: "Confirmación",
+                message: "Usted va a realizar una carga masiva de contactos. El proceso no se podrá deshacer.<br/><br/>¿Está seguro de continuar?",
+                closeButton: true,
+                buttons: {
+                    confirm: {
+                        label: 'Si',
+                        className: 'btn-primary'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+
+                    if (result === null) {
+                        closeBootbox();
+                        return;
+                    }
+                    else if (result) {
+
+                        showLoading("Enviando información. Espere por favor...");
+                        var strUrl = pathToAction() + "/Organization/ProcessExcel";
+                        var dataForm = new FormData(document.getElementById("datos_importar"));
+
+                        $.ajax({
+                            type: 'POST',
+                            url: strUrl,
+                            dataType: "html",
+                            data: dataForm,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (response) {
+                                closeNotify();
+                                showSuccess("Transacción exitosa. Espere por favor...");
+                                $("#resultado_proceso").html(response);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        else {
+            showError("Por favor revise los campos marcados." + msjError);
+        }
+    }
+
+</script>
+
+<div class="row-fluid">
+    <div class="col-md-12 bg-primary-custom">
+        <div class="titulo">Cargue masivo</div>
+    </div>
+</div>
+
+<div id="procesos_buscador" class="container-fluid" style="clear:both;padding-top:15px;padding-left:1rem;padding-right:1rem;">
+
+    <div class="panel_buscador">
+        <div class="panel panel-bordered-primary">
+            <div class="panel-body panel-custom-interno">
+                Cargue masivo de contactos sus alarmas                         
+                <hr />
+                <form id="datos_importar" name="datos_importar" action="" method="post" enctype="multipart/form-data">
+                    <div class="row" style="height:10px;">&nbsp;</div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="mb-0">Archivo:</label>
+                        </div>
+                        <div class="col-md-5">
+                            @Html.TextBox("archivo", "", new { @class = "form-control required", @type = "file" })
+                            <div class="alert alert-info p-1 m-0"><a href="~/documents/CargueMasivo/PlantillaCargueMasivo.xlsx" target="_blank" class="text-white">Descargar formato de carga aquí <i class="fa fa-download text-white"></i></a></div>
+                        </div>
+
+                    </div>
+                    <div class="row" style="height:10px;">&nbsp;</div>
+                    <center>
+                        <input type="button" value="Cargar" class="btn btn-primary datos_forma_btnSave" onclick="cargarExcel();">
+                    </center>
+                </form>
+                <div class="row" style="height:10px;">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+    <div id="resultado_proceso" class="" style="">
+
+    </div>
+    <br />
+</div>

@@ -1,0 +1,94 @@
+﻿@model ListaDistribucion.Web.Models.Parameters.ParametersModel
+@{ Layout = null; }
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        oTable = $('#list_parametros').dataTable({ "pagingType": "full_numbers", "bStateSave": true, "bInfo": false });
+    });
+
+    function guardarParametros() {
+
+        validateForm("datos_parametros");
+        var msjError = "";
+        if ($("#datos_parametros").valid() && msjError == "") {
+
+            showLoading("Enviando información. Espere por favor...");
+            var strUrl = pathToAction() + "/Parameter/GuardarParametros";
+            var dataForm = new FormData(document.getElementById("datos_parametros"));
+
+            $.ajax({
+                type: 'POST',
+                url: strUrl,
+                dataType: "json",
+                data: dataForm,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    closeNotify();
+                    showSuccess("Transacción exitosa. Espere por favor...");
+                }
+            });
+        }
+        else {
+            showError("Por favor revise los campos marcados.");
+        }
+
+    }
+
+</script>
+
+<div class="row-fluid">
+    <div class="col-md-12 bg-primary-custom">
+        <div class="titulo">Información de parametros</div>
+    </div>
+</div>
+
+<div id="parametros" class="container-fluid content-list" style="clear:both;padding-top:15px;">
+    <form id="datos_parametros" name="datos_parametros" action="" method="post" enctype="multipart/form-data">
+        <div class="" id="content_parametros">
+            <table id="list_parametros" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Código parametro</th>
+                        <th>Parametro</th>
+                        <th>Valor</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        var i = 1;
+                        foreach (var parametro in Model.ListadoParametros)
+                        {
+                            <tr>
+                                <td>@parametro.ID_SYSTEM_PARAMS</td>
+                                <td>@parametro.DESCRIPTION</td>
+                                <td>
+                                    <input type="hidden" id="id_parametro_@i" name="id_parametro_@i" value="@parametro.ID_SYSTEM_PARAMS">
+                                    @Html.TextBox("valor_" + i, parametro.VALUE, new { @class = "form-control no_mayus", @size = "100" })
+                                </td>
+                                <td>@parametro.OBSERVATIONS</td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="row" style="height:10px;">&nbsp;</div>
+        <center>
+            <input type="hidden" id="total_parametros" name="total_parametros" value="@(i - 1)">
+            <input type="button" value="Guardar" class="btn btn-primary datos_parametros_btnSave" onclick="guardarParametros()">
+        </center>
+    </form>
+    <br/>
+</div>
+
+
+
+
+
+

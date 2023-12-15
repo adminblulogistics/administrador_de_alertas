@@ -1,0 +1,81 @@
+﻿@model ListaDistribucion.Web.Models.Instructive.InstructiveModel
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        oTableExport = $('#list_instructives').dataTable({
+            "pagingType": "full_numbers",
+            "iDisplayLength": 50,
+            "bStateSave": true,
+        });
+
+    });
+
+</script>
+
+<div class="row-fluid titulo_resultado_busqueda">
+    <div class="col-md-12 bg-primary-custom">
+        <div class="titulo">Resultado de la busqueda</div>
+    </div>
+</div>
+
+<div id="instructives">
+    <div class="content_menu_grilla">
+        
+    </div>
+    <div id="content_instructive">
+        <table id="list_instructives" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Tema</th>
+                    <th>Descripción</th>
+                    <th>Documentos</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var instructivo in Model.ListadoInstructivos)
+                {
+                    <tr>
+                        <td>@instructivo.ID_INSTRUCTIVE</td>
+                        <td>@instructivo.TOPIC</td>
+                        <td>@instructivo.DESCRIPTION</td>
+                        <td>
+                            <input type="hidden" id="ATTACHED" name="ATTACHED" value="@instructivo.ATTACHED">
+                            @{
+                                if (!string.IsNullOrEmpty(instructivo.ATTACHED))
+                                {
+                                    var arrArchivos = instructivo.ATTACHED.Split(';');
+                                    var i = 0;
+                                    foreach (var archivo in arrArchivos)
+                                    {
+                                        if (!string.IsNullOrEmpty(archivo))
+                                        {
+                                            <span>
+                                                <a href="@Url.Content("~/Instructive/VerArchivo?id_instructive=" + instructivo.ID_INSTRUCTIVE + "&item=" + i)" title="Ver @archivo" target="_blank">
+                                                    <i class="fa fa-file-archive"></i> @archivo
+                                            </span>
+                                            <br />
+                                        }
+                                        i = i + 1;
+                                    }
+                                }
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@* Evitar cierre de sesión *@
+<script type="text/javascript">
+    $(document).ready(function () {
+        window.setInterval("activarSession(0)", 200000);
+    });
+</script>
