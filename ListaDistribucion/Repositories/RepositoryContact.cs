@@ -74,6 +74,11 @@ namespace LD.Repositories
             return _dbContext.CONTACTS.Where(w => w.ID_CONTACT == id).FirstOrDefault();
         }
 
+        public List<CONTACTS> ObtenerContactosListId(long id, long[] ids)
+        {
+            return _dbContext.CONTACTS.Where(w => w.ID_ORGANIZATION_BODEGA == id && ids.Contains(w.ID_CONTACT)).ToList();
+        }
+
         public List<CONTACTS> ObtenerContactosPorOrganizacionId(long id)
         {
             return _dbContext.CONTACTS.Where(w => w.ID_ORGANIZATION_BODEGA == id).ToList();

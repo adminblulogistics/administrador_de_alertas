@@ -14,6 +14,7 @@ public partial class GB_GLOBALContext : DbContext
     {
     }
 
+    public virtual DbSet<CGW_GEN_SalesPerson> CGW_GEN_SalesPerson { get; set; }
     public virtual DbSet<GB_PermissionUserModule> GB_PermissionUserModule { get; set; }
 
     public virtual DbSet<GB_module> GB_module { get; set; }
@@ -32,6 +33,81 @@ public partial class GB_GLOBALContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<CGW_GEN_SalesPerson>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.charAccountNumber)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.charAddress)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.charCity)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.charCode)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.charContact)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.charCountry)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.charDateFrom)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.charDateTo)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.charEmail)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.charFax)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.charInterCompanyCode)
+                .IsRequired()
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.charLastName)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.charMiddleName)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.charName)
+                .IsRequired()
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.charPhone1)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.charPhone2)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.charState)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.charStatus)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.charTitle)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.charType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.charZipCode)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.codeCW)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.intSalesPersonID).ValueGeneratedOnAdd();
+        });
+
         modelBuilder.Entity<GB_PermissionUserModule>(entity =>
         {
             entity.HasNoKey();

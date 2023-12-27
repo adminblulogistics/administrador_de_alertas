@@ -24,6 +24,7 @@ namespace LD.Services.Interfaces.Users
         USERS_APPS obtenerUsuarioCOTPorSF(string UserSF);
         List<USERDto> obtenerComercialesPorSaleSupport(int idUser);
         List<USERDto> obtenerSaleSupportPorComercial(int idUser);
+        string ObtenerCorreosPersonasInside(string company, string codPersona ="", string modulo="");
 
         ADDITIONAL_USER_INFORMATION obtenerUsuarioLDPorID(int idUser);
         ADDITIONAL_USER_INFORMATION obtenerUsuarioLDPorAlisasSF(string aliasSaleF);

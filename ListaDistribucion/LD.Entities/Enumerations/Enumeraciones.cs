@@ -34,5 +34,81 @@ namespace LD.Entities.Enumerations
             Comercial = 144,
             SaleSupport = 147,
         }
+        public enum TransportMode
+        {
+            Sea = 1,
+            Air = 2,
+            Road = 3,
+            Raid = 4,
+            Fluvial = 5,
+        }
+        public enum ModuleTransport
+        {
+            IMP = 1,
+            OCE = 2,
+            AIR = 3,
+            IMPA = 4,
+        }
+        public enum WayBillType
+        {
+            MWB = 1,
+        }
+        public enum PortLocation
+        {
+            ArrivalCTOAddress = 1,
+        }
+        public enum SendersLocalClient
+        {
+            SendersLocalClient = 1,
+            SendersOverseasAgent = 2,
+            ConsigneeDocumentaryAddress = 3,
+            ConsignorDocumentaryAddress = 4,
+            ArrivalCFSAddress = 5,
+            NotifyParty = 6,
+        }
+        public enum PaisAbreviado
+        {
+            CO = 1,
+            EC = 2,
+            MX = 3
+        }
+        public enum PaisAbreviado3Letras
+        {
+            COL = 1,
+            ECU = 2,
+            MEX = 3
+        }
+        public enum Dias
+        {
+            Lunes =1,
+            Martes = 2,
+            Miercoles = 3,
+            Jueves = 4,
+            Viernes = 5,
+            Sabado = 6,
+            Domingo = 7
+        }
+        public enum ShipmentType
+        {
+            ASM = 1,
+            STD = 2,
+        }
+        public enum BillIssued
+        {
+            ShippedOnBoard = 1,
+            BillIssued = 2,
+            Departure = 3,
+        }
+        public enum Alarmas
+        {
+            ETAPOD = 1,
+            ONBOARD = 2
+        }
+        public enum Modulos
+        {
+            IMPO = 1,
+            EXPO = 2,
+            STATUS = 3,
+        }
     }
 }

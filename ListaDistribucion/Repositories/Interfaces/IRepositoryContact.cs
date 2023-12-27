@@ -11,6 +11,7 @@ namespace LD.Repositories.Interfaces
     public interface IRepositoryContact
     {
         List<CONTACTS> ObtenerContactosPorOrganizacionId(long id);
+        List<CONTACTS> ObtenerContactosListId(long id, long[] ids);
         CONTACTS ObtenerContactoPorId(long id);
         Respuesta actualizarContacto(CONTACTS contacto);
         Respuesta insertarContacto(CONTACTS contacto);

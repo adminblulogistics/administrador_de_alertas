@@ -7,13 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentFTP" Version="48.0.3" />
     <PackageReference Include="LinqToExcel" Version="1.11.0" />
+    <PackageReference Include="NCrontab.Signed" Version="3.3.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LD.Integration.SaleForce\LD.Integrations.csproj" />
     <ProjectReference Include="..\LD.Utilities\LD.Utilities.csproj" />
     <ProjectReference Include="..\Repositories\LD.Repositories.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
 
 </Project>

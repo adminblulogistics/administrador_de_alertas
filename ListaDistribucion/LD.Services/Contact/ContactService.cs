@@ -2,6 +2,7 @@
 using LD.EntitiesLD;
 using LD.Repositories.Interfaces;
 using LD.Services.Interfaces.Alarms;
+using LD.Services.Interfaces.Auditoria;
 using LD.Services.Interfaces.Contact;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace LD.Services.Contact
     {
         private readonly IRepositoryContact _repositoryContact;
         private readonly IAlarmService _alarmService;
-        public ContactService(IRepositoryContact repositoryContact, IAlarmService alarmService)
+        private readonly IAuditoriaService _auditoriaService;
+        public ContactService(IRepositoryContact repositoryContact, IAlarmService alarmService, IAuditoriaService auditoriaService)
         {
             _repositoryContact = repositoryContact;
             _alarmService = alarmService;
+            _auditoriaService = auditoriaService;
         }
 
         public Respuesta actualizarContacto(CONTACTS contacto)
@@ -32,13 +35,14 @@ namespace LD.Services.Contact
             Respuesta respuesta = new Respuesta();
             try
             {
-                using (var tran = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                respuesta = _alarmService.eliminarAlarmasPorContacto(contacto.ID_CONTACT);
+                if (respuesta.ProcesoExitoso)
                 {
-                    respuesta = _alarmService.eliminarAlarmasPorContacto(contacto.ID_CONTACT);
-                    if(respuesta.ProcesoExitoso)
-                        _repositoryContact.eliminarContacto(contacto);
-                    tran.Complete();
+                    _auditoriaService.insertarAuditoria(new ACTIVITY_LOG { ID_CLIENT = contacto.ID_ORGANIZATION_BODEGA, OPERATION = "Elimina Contacto", OLD_VALUE = contacto.NAME_CONTACT + Environment.NewLine + contacto.EMAIL_CONTACT + Environment.NewLine + contacto.PHONE_CONTACT, NEW_VALUE =""});
+                    respuesta = _repositoryContact.eliminarContacto(contacto);
+
                 }
+
                 respuesta.ProcesoExitoso = true;
             }
             catch (Exception ex)
@@ -71,6 +75,11 @@ namespace LD.Services.Contact
         public Respuesta eliminarContactosPorOrganizacion(int id)
         {
             return _repositoryContact.eliminarContactosPorOrganizacion(id);
+        }
+
+        public List<CONTACTS> ObtenerContactosListId(long id, long[] ids)
+        {
+            return _repositoryContact.ObtenerContactosListId(id, ids);
         }
     }
 }

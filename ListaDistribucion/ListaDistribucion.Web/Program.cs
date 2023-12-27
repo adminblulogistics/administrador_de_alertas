@@ -8,13 +8,18 @@ using LD.Repositories;
 using LD.Repositories.Interfaces;
 using LD.Services;
 using LD.Services.Alarms;
+using LD.Services.Auditoria;
+using LD.Services.Chrontab;
 using LD.Services.Companys;
 using LD.Services.Contact;
+using LD.Services.FTP;
 using LD.Services.Instructives;
 using LD.Services.Integration;
 using LD.Services.Interfaces.Alarms;
+using LD.Services.Interfaces.Auditoria;
 using LD.Services.Interfaces.Companys;
 using LD.Services.Interfaces.Contact;
+using LD.Services.Interfaces.FTP;
 using LD.Services.Interfaces.Instructives;
 using LD.Services.Interfaces.Integration;
 using LD.Services.Interfaces.Notifications;
@@ -22,11 +27,13 @@ using LD.Services.Interfaces.Organizations;
 using LD.Services.Interfaces.Parameters;
 using LD.Services.Interfaces.SendEmails;
 using LD.Services.Interfaces.Users;
+using LD.Services.Interfaces.xmlCargoWise;
 using LD.Services.Notifications;
 using LD.Services.Organizations;
 using LD.Services.Parameters;
 using LD.Services.SendEmails;
 using LD.Services.Users;
+using LD.Services.xmlCargoWise;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +45,7 @@ builder.Services.AddDbContext<GB_GLOBALContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("GBConnection")));
 builder.Services.AddDbContext<BPCotizadorContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("CotizadorConnection")));
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IRepositoryInstructive, RepositoryInstructive>();
 builder.Services.AddScoped<IRepositoryUserLD, RepositoryUserLD>();
@@ -51,6 +59,7 @@ builder.Services.AddScoped<IRepositoryContact, RepositoryContact>();
 builder.Services.AddScoped<IRepositorySalesSupport, RepositorySalesSupport>();
 builder.Services.AddScoped<IRepositoryAlarm, RepositoryAlarm>();
 builder.Services.AddScoped<IRepositoryUserCOT, RepositoryUserCOT>();
+builder.Services.AddScoped<IRepositoryAuditoria, RepositoryAuditoria>();
 
 builder.Services.AddScoped<IInstructiveService, InstructiveService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -64,6 +73,10 @@ builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IAlarmService, AlarmService>();
 builder.Services.AddScoped<INotificationsService, NotificationsService>();
 builder.Services.AddScoped<ISendEmailsService, SendEmailsService>();
+builder.Services.AddScoped<IXMLCargoWiseService, XMLCargoWiseService>();
+builder.Services.AddScoped<IAuditoriaService, AuditoriaService>();
+builder.Services.AddScoped<IFTPManager, FTPManager>();
+builder.Services.AddTransient<Microsoft.Extensions.Hosting.IHostedService, ScheduledTask>();
 
 
 builder.Services.AddSession(options => {
@@ -75,6 +88,7 @@ builder.Services.ConfigureApplicationCookie(o =>
     o.SlidingExpiration = true;
 });
 builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 

@@ -10,10 +10,11 @@ using LD.Entities.Dtos;
 using LD.EntitiesLD;
 using LD.Entities;
 using LD.EntitiesCotizador;
+using LD.Entities.Enumerations;
 
 namespace LD.Services.Users
 {
-    public partial class UserService: Common.BaseServiceApplication<LD.EntitiesGB.GB_user>,IUserService
+    public partial class UserService: IUserService
     {
         private readonly IRepositoryUserGB _repositoryUserGB;
         private readonly IRepositoryUserLD _repositoryUserLD;
@@ -25,13 +26,6 @@ namespace LD.Services.Users
             _repositoryUserLD = repositoryLD;
             _repositorySalesSupport = repositorySalesSupport;
             _repositoryUserCOT = repositoryUserCOT;
-        }
-
-        protected override void ValidationsToCreate(GB_user entity)
-        {
-        }
-        protected override void ValidationsToEdit(GB_user entity)
-        {
         }
 
         public List<GB_userRole> obtenerAsignacionesDeRol()
@@ -233,6 +227,33 @@ namespace LD.Services.Users
             }
 
             return listSaleSupport;
+        }
+        public string ObtenerCorreosPersonasInside(string company, string codPersona = "", string modulo ="")
+        {
+            string correo = string.Empty;
+            string correoPersona = "admin.cw@blulogistics.com";
+            if (company == nameof(Enumeraciones.PaisAbreviado3Letras.ECU))
+	   		    correoPersona = "operationleaders.ecuador@blulogistics.com";
+            else if (company == nameof(Enumeraciones.PaisAbreviado3Letras.COL))
+	   		    correoPersona = "orlando.gomez@blulogistics.com";
+            else if (company == nameof(Enumeraciones.PaisAbreviado3Letras.MEX))
+		    {
+                if (modulo == nameof(Enumeraciones.Modulos.IMPO))
+    				correoPersona = "import.mexico@blulogistics.com";
+                else if(modulo == nameof(Enumeraciones.Modulos.EXPO))
+				    correoPersona = "javier.vertiz@blulogistics.com";
+                if (modulo == nameof(Enumeraciones.Modulos.STATUS))
+				    correoPersona = "operaciones.mexico@blulogistics.com";
+            }
+
+            if (codPersona != "")
+			    //OBTENEMOS EL LA PERSONA SEGUN EL CODIGO
+				correo = _repositoryUserGB.ObtenerCorreosPersonasInside(codPersona);
+
+            if (correo != "" )
+		        correoPersona = correo;
+
+            return correoPersona;
         }
     }
 }

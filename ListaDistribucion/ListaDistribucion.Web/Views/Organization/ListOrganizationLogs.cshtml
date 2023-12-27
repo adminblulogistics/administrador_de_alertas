@@ -1,0 +1,69 @@
+﻿@model ListaDistribucion.Web.Models.Organization.OrganizationModel
+@{ Layout = null; }
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        oTableExport = $('#lista_logs').dataTable({
+            "pagingType": "full_numbers",
+            "iDisplayLength": 100,
+            "bStateSave": true,
+        });
+    });
+
+
+</script>
+
+<div class="row-fluid mt-2">
+    <div class="col-md-12 bg-primary-custom">
+        <div>Información de contactos</div>
+    </div>
+</div>
+
+<div id="logs" style="clear: both;">
+    <div id="content_logs" class="">
+        <div class="text-right">
+            @*<a href="javascript:editOrganizationContact(0)" class="btn btn-success btn-sm" style="margin-top:5px;"> <i class="fa fa-plus-square fa-lg btn-crud"></i> Agregar</a>
+            <a href="javascript:editOrganizationContact()" class="btn btn-primary btn-sm" style="margin-top:5px;"> <i class="fa fa-edit fa-lg btn-crud"></i> Editar</a>&nbsp;*@
+            <a href="javascript:exportarExcel('lista_logs', 'Reporte de logs');" class="btn btn-info btn-sm" style="margin-top:5px;"> <i class="fa fa-file-excel fa-lg btn-crud"></i> Descargar</a>&nbsp;
+        </div>
+        <hr class="mt-1" />
+        <table id="lista_logs" class="table table-sm table-striped table-bordered dt-responsive nowrap" cellspacing="0" style="width:100%;">
+            <thead>
+                <tr>
+                    @*<th class="no-sort"></th>*@
+                    <th>Cliente</th>
+                    <th>Operación</th>
+                    <th>Valor Antiguo</th>
+                    <th>Valor Nuevo</th>
+                    <th>Usuario</th>
+                    <th>Fecha Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Logs.Count > 0)
+                {
+                    foreach (var contacto in Model.Logs)
+                    {
+                        <tr>
+                            @*<td><input type="radio" name="check_contacto" value="@contacto.ID_CONTACT "></td>*@
+                            <td>@contacto.ID_CLIENT</td>
+                            <td>@contacto.OPERATION</td>
+                            <td><pre style="font-family: Arial;">@contacto.OLD_VALUE</pre></td>
+                            <td><pre style="font-family: Arial;">@contacto.NEW_VALUE</pre></td>
+                            <td>@contacto.ID_USER</td>
+                            <td>@contacto.DATE_OPERATION</td>
+                        </tr>
+                    }
+                }
+                else {
+                    <tr>
+                        <td class="text-center" colspan="6">No hay información disponible.</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="resultVista" class="modal" tabindex="-1"></div>

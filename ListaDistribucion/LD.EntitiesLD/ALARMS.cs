@@ -14,5 +14,12 @@ public partial class ALARMS
     public string DESCRIPTION { get; set; }
 
     public string EVENTCODE { get; set; }
+
     public bool SHOW_CALENDAR { get; set; }
+
+    public DateTime? LAST_TIME_EXECUTE { get; set; }
+
+    public DateTime? NEXT_DATE_EXECUTE { get; set; }
+
+    public bool ACTIVE { get; set; }
 }

@@ -50,7 +50,7 @@ public partial class ListaDistribucionContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.OPERATION)
                 .IsRequired()
-                .HasMaxLength(10)
+                .HasMaxLength(70)
                 .IsUnicode(false);
         });
 
@@ -92,15 +92,20 @@ public partial class ListaDistribucionContext : DbContext
         {
             entity.HasKey(e => e.ID_ALARM).HasName("PK_ALARMS_1");
 
+            entity.Property(e => e.ACTIVE)
+                .IsRequired()
+                .HasDefaultValueSql("((1))");
             entity.Property(e => e.DESCRIPTION)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.EVENTCODE)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.LAST_TIME_EXECUTE).HasColumnType("datetime");
             entity.Property(e => e.NAME)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.NEXT_DATE_EXECUTE).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<COMPANIES>(entity =>

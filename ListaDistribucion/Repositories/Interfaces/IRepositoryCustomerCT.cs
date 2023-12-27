@@ -12,6 +12,7 @@ namespace LD.Repositories.Interfaces
         List<CUSTOMERS> ObtenerOrganizacionesPorComercial(string idSaleforceComercial, bool? esAgente = null);
         List<CUSTOMERS> ObtenerOrganizacionesPorComerciales(List<string> listIdSF, bool? esAgente = null);
         CUSTOMERS ObtenerOrganizacionPorId(long id);
+        CUSTOMERS obtenerOrganizacionCustomerPorCodeCW(string codeCW);
         bool validarExistenciaOrganizacion(long id);
     }
 }
