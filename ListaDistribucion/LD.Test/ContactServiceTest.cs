@@ -34,6 +34,14 @@ namespace LD.Test
             Assert.IsTrue(lstReturn.ProcesoExitoso);
         }
         [TestMethod]
+        public void eliminarContactoException()
+        {
+            LD.Services.Interfaces.Contact.IContactService contactService = new LD.Services.Contact.ContactService(_repositoryContact.Object, _alarmService.Object, null);
+            var lstReturn = contactService.eliminarContacto(Contacto);
+            Assert.IsFalse(lstReturn.ProcesoExitoso);
+        }
+
+        [TestMethod]
         public void insertarContacto()
         {
             LD.Services.Interfaces.Contact.IContactService contactService = new LD.Services.Contact.ContactService(_repositoryContact.Object, _alarmService.Object, _auditoriaService.Object);
