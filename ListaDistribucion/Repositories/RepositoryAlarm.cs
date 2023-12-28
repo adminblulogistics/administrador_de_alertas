@@ -44,6 +44,10 @@ namespace LD.Repositories
         {
             return _dbContext.ALARMS.Where(w => w.ID_ALARM == id).FirstOrDefault();
         }
+        public ALARMS obtenerAlarmaPorCode(string code)
+        {
+            return _dbContext.ALARMS.Where(w => w.EVENTCODE == code).FirstOrDefault();
+        }
         public Respuesta eliminarAlarmasPorContacto(long id)
         {
             _dbContext.CONTACT_ALARMS.RemoveRange(_dbContext.CONTACT_ALARMS.Where(w => w.ID_CONTACT == id));
@@ -57,6 +61,11 @@ namespace LD.Repositories
             _dbContext.SaveChanges();
             Respuesta respuesta = new Respuesta { ProcesoExitoso = true };
             return respuesta;
+        }
+
+        public List<CONTACT_ALARMS> obtenerAlarmasPorOrganizacionEvent(long id, string eventType)
+        {
+            return _dbContext.CONTACT_ALARMS.Where(w => w.ID_ORGANIZATION == id && w.EVENTCODE == eventType).ToList(); 
         }
     }
 }

@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LD.EntitiesLD;
 
@@ -20,4 +21,6 @@ public partial class ACTIVITY_LOG
     public string OLD_VALUE { get; set; }
 
     public string NEW_VALUE { get; set; }
+    [NotMapped]
+    public string NAME_USER { get; set; }
 }

@@ -17,6 +17,7 @@ namespace LD.Services.Interfaces.Organizations
         List<ORGANIZATIONDto> obtenerOrganizacionesPorSaleSupport(ADDITIONAL_USER_INFORMATION user, bool? esAgente = null);
         ORGANIZATIONDto obtenerOrganizacionPorId(long id);
         CUSTOMERS obtenerOrganizacionCustomerPorId(long id);
+        CUSTOMERS obtenerOrganizacionCustomerPorCodeCW(string codeCW);
         ADDITIONAL_ORGANIZATION_INFORMATION obtenerInfoAdicionalLDPorID(long id);
         Respuesta insertarInfoAdicionalLD(ADDITIONAL_ORGANIZATION_INFORMATION orgInfoAdd);
         Respuesta actualizarInfoAdicionalLD(ADDITIONAL_ORGANIZATION_INFORMATION orgInfoAdd);
@@ -24,5 +25,6 @@ namespace LD.Services.Interfaces.Organizations
         Respuesta saveOrganization(int idOrganization, int idEjecutivo);
         ADDITIONAL_ORGANIZATION_INFORMATION obtenerInfoAdicionalLDPorIDEjecutivo(int id);
         Respuesta ValidarExcelMasivo(IFormFile archivo);
+        List<ACTIVITY_LOG> obtenerLogsPorIdOrganizacion(long id);
     }
 }

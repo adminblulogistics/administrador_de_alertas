@@ -114,6 +114,15 @@ namespace LD.Repositories
             return listadoModulos;
         }
 
+        public string ObtenerCorreosPersonasInside(string code)
+        {
+            string email = string.Empty;
+            CGW_GEN_SalesPerson usuario = _dbContext.CGW_GEN_SalesPerson.Where(w => w.codeCW == code).FirstOrDefault();
+            if (usuario != null)
+                email = usuario.charEmail;
+            return email;
+        }
+
         #endregion
     }
 }

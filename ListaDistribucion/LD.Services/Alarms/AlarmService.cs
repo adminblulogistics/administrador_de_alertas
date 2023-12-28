@@ -31,7 +31,10 @@ namespace LD.Services.Alarms
         {
             return _repositoryAlarm.obtenerAlarmaPorId(id);
         }
-
+        public ALARMS obtenerAlarmaPorCode(string code)
+        {
+            return _repositoryAlarm.obtenerAlarmaPorCode(code);
+        }
         public List<CONTACT_ALARMS> obtenerAlarmasPorContact(long idContact)
         {
             return _repositoryAlarm.obtenerAlarmasPorContact(idContact);
@@ -45,6 +48,11 @@ namespace LD.Services.Alarms
         public Respuesta eliminarAlarmasPorOrganizacionContacto(long id)
         {
             return _repositoryAlarm.eliminarAlarmasPorOrganizacionContacto(id);
+        }
+
+        public List<CONTACT_ALARMS> obtenerAlarmasPorOrganizacionEvent(long id, string eventType)
+        {
+            return _repositoryAlarm.obtenerAlarmasPorOrganizacionEvent(id, eventType);
         }
     }
 }

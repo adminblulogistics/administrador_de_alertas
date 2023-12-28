@@ -14,6 +14,7 @@ namespace ListaDistribucion.Web.Models.Organization
         public List<ALARMS> ListAlarms { get; set; }
         public CONTACTS Contacto { get; set; }
         public ORGANIZATIONDto Organizacion { get; set; }
+        public List<ACTIVITY_LOG> Logs { set; get; }
         public Respuesta ResultadoArchivoProcesado { set; get; }
     }
 }

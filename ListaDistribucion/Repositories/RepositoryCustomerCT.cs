@@ -17,6 +17,13 @@ namespace LD.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public CUSTOMERS obtenerOrganizacionCustomerPorCodeCW(string codeCW)
+        {
+            CUSTOMERS cliente = _dbContext.CUSTOMERS.Where(x => x.CW_CODE == codeCW).FirstOrDefault();
+            return cliente;
+        }
+
         public List<CUSTOMERS> ObtenerOrganizacionesPorComercial(string idSaleforceComercial, bool? esAgente = null)
         {
             List<CUSTOMERS> listadoClientes = _dbContext.CUSTOMERS.Where(x => x.ID_SALES_PERSON_SF == idSaleforceComercial).

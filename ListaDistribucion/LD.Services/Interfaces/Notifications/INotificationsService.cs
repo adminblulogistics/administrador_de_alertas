@@ -9,7 +9,7 @@ namespace LD.Services.Interfaces.Notifications
 {
     public interface INotificationsService
     {
-        Task<Respuesta> NotificationsExecute();
+        Task<Respuesta> NotificationsETA();
 
         Task<Respuesta> Notifications();
     }

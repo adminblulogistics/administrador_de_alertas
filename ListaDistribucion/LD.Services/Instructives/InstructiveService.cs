@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace LD.Services.Instructives
 {
-    public partial class InstructiveService: Common.BaseServiceApplication<LD.EntitiesLD.INSTRUCTIVE>,IInstructiveService
+    public partial class InstructiveService: IInstructiveService
     {
         private readonly IRepositoryInstructive _repositoryInstructives;
         private readonly IHostingEnvironment _hostingEnvironment;

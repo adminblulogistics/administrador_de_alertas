@@ -11,6 +11,7 @@ namespace LD.Services.Interfaces.Contact
     public interface IContactService
     {
         List<CONTACTS> ObtenerContactosPorOrganizacionId(long id);
+        List<CONTACTS> ObtenerContactosListId(long id, long[] ids);
         CONTACTS ObtenerContactoPorId(long id);
         Respuesta insertarContacto(CONTACTS contacto);
         Respuesta actualizarContacto(CONTACTS contacto);

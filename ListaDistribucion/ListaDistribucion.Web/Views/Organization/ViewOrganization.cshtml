@@ -49,6 +49,12 @@
             loader();
         });
     }
+    function cargarLogs() {
+        loader();
+        $("#log-cliente").load(pathToAction() + "/Organization/ListOrganizationLogs", { idOrganization: @Model.Organizacion.ID}, function () {
+            loader();
+        });
+    }
 
 </script>
 
@@ -108,10 +114,14 @@
                 <li class="nav-item tab_custom">
                     <a href="#contactos-cliente" class="nav-link active" aria-controls="content-contactos-cliente" role="tab" data-toggle="pill" aria-selected="true" onclick="cargarContactos();">Contactos</a>
                 </li>
+                <li class="nav-item tab_custom">
+                    <a href="#log-cliente" class="nav-link" aria-controls="content-log-cliente" role="tab" data-toggle="pill" aria-selected="false" onclick="cargarLogs();">Logs</a>
+                </li>
             </ul>
 
             <div class="tab-content">
                 <div id="contactos-cliente" role="tabpanel" class="tab-pane fade show p-2 border active" aria-labelledby="content-contactos-cliente"></div>
+                <div id="log-cliente" role="tabpanel" class="tab-pane fade show p-2 border" aria-labelledby="content-log-cliente"></div>
             </div>
 
         </div>

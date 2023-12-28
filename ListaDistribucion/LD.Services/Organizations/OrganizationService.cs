@@ -5,6 +5,7 @@ using LD.EntitiesCotizador;
 using LD.EntitiesLD;
 using LD.Repositories.Interfaces;
 using LD.Services.Interfaces.Alarms;
+using LD.Services.Interfaces.Auditoria;
 using LD.Services.Interfaces.Contact;
 using LD.Services.Interfaces.Organizations;
 using LD.Services.Interfaces.Users;
@@ -13,6 +14,7 @@ using LD.Utilities.Email;
 using LD.Utilities.Excel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +33,9 @@ namespace LD.Services.Organizations
         private readonly IContactService _contactService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IAlarmService _alarmService;
-        public OrganizationService(IRepositoryOrganizationLD repositoryOrganizationLD, IRepositoryCustomerCT repositoryCustomerCT, IUserService userService, IContactService contactService, IHostingEnvironment hostingEnvironment, IAlarmService alarmService)
+        private readonly IAuditoriaService _auditoriaService;
+        public OrganizationService(IRepositoryOrganizationLD repositoryOrganizationLD, IRepositoryCustomerCT repositoryCustomerCT, IUserService userService, 
+            IContactService contactService, IHostingEnvironment hostingEnvironment, IAlarmService alarmService, IAuditoriaService auditoriaService)
         {
             _repositoryOrganizationLD = repositoryOrganizationLD;
             _repositoryCustomerCT = repositoryCustomerCT;
@@ -39,6 +43,7 @@ namespace LD.Services.Organizations
             _contactService = contactService;
             _hostingEnvironment = hostingEnvironment;
             _alarmService = alarmService;
+            _auditoriaService = auditoriaService;
         }        
 
         public List<ORGANIZATIONDto> obtenerOrganizacionesPorUsuario(int iduserComercial, int iduserSaleSupport, int iduserEjecutivo, int idSession, bool? esAgente = null)
@@ -225,11 +230,19 @@ namespace LD.Services.Organizations
             if (contacto.ID_CONTACT == 0)
             {
                 respuesta = _contactService.validarContactoExistente(contacto);
-                if(!respuesta.ProcesoExitoso)
+                if (!respuesta.ProcesoExitoso)
+                {
                     respuesta = _contactService.insertarContacto(contacto);
+                    _auditoriaService.insertarAuditoria(new ACTIVITY_LOG { ID_CLIENT = idOrg, OPERATION = "Inserta Contacto", OLD_VALUE = "", NEW_VALUE = contacto.NAME_CONTACT + Environment.NewLine + contacto.EMAIL_CONTACT + Environment.NewLine + contacto.PHONE_CONTACT });
+                }
             }
             else
+            {
+                var contactOld  = _contactService.ObtenerContactoPorId(contacto.ID_CONTACT);
+                _auditoriaService.insertarAuditoria(new ACTIVITY_LOG { ID_CLIENT = idOrg, OPERATION = "Actualiza Contacto", OLD_VALUE = contactOld.NAME_CONTACT + Environment.NewLine  + contactOld.EMAIL_CONTACT + Environment.NewLine + contactOld.PHONE_CONTACT , NEW_VALUE = contacto.NAME_CONTACT + Environment.NewLine + contacto.EMAIL_CONTACT + Environment.NewLine + contacto.PHONE_CONTACT });
                 respuesta = _contactService.actualizarContacto(contacto);
+                
+            }          
 
             return respuesta;
         }
@@ -243,12 +256,14 @@ namespace LD.Services.Organizations
             {                
                 orgAddNew.ID_ORGANIZATION_BODEGA = idOrganization;
                 orgAddNew.ID_SERVICE_CLIENT = idEjecutivo;
+                _auditoriaService.insertarAuditoria(new ACTIVITY_LOG { ID_CLIENT = idOrganization, OPERATION = "Asigna Ejecutivo", OLD_VALUE = "", NEW_VALUE = orgAddNew.ID_SERVICE_CLIENT.ToString() });
                 this.insertarInfoAdicionalLD(orgAddNew);
             }
             else
             {
                 orgAddNew.ID_ORGANIZATION_BODEGA = organizacion.ID_ORGANIZATION_BODEGA;
                 orgAddNew.ID_SERVICE_CLIENT = idEjecutivo;
+                _auditoriaService.insertarAuditoria(new ACTIVITY_LOG { ID_CLIENT = idOrganization, OPERATION = "Actializa Ejecutivo", OLD_VALUE = orgAddNew.ID_SERVICE_CLIENT.ToString(), NEW_VALUE = orgAddNew.ID_SERVICE_CLIENT.ToString()});
                 this.actualizarInfoAdicionalLD(orgAddNew);
             }
 
@@ -347,12 +362,12 @@ namespace LD.Services.Organizations
                                     if (!validEmail)
                                         errores.Add($"Fila número {fila.REGISTRO_NUMBER} el Email no tiene un formato valido.");
                                 }
-                                if (boolidOrg && validEmail)
-                                {
-                                    var contactoExiste = _contactService.validarContactoExistente(new CONTACTS { EMAIL_CONTACT = fila.EMAIL_CONTACT, ID_ORGANIZATION_BODEGA = idOrg });
-                                    if (contactoExiste.ProcesoExitoso)
-                                        errores.Add($"Fila número {fila.REGISTRO_NUMBER} {contactoExiste.MensajeRespuesta}");
-                                }
+                                //if (boolidOrg && validEmail)
+                                //{
+                                //    var contactoExiste = _contactService.validarContactoExistente(new CONTACTS { EMAIL_CONTACT = fila.EMAIL_CONTACT, ID_ORGANIZATION_BODEGA = idOrg });
+                                //    if (contactoExiste.ProcesoExitoso)
+                                //        errores.Add($"Fila número {fila.REGISTRO_NUMBER} {contactoExiste.MensajeRespuesta}");
+                                //}
                             }
                             //Valida alarmas
                             if (!string.IsNullOrEmpty(fila.ALARMS))
@@ -378,10 +393,18 @@ namespace LD.Services.Organizations
 
                         if (!erroresTotal.Any())
                         {
-                            foreach (var regis in lstregistros)
+                            foreach (var elim in lstregistros)
                             {
+                                respuesta = _alarmService.eliminarAlarmasPorOrganizacionContacto(Convert.ToInt32(elim.ID_ORGANIZATION));
+                                if (respuesta.ProcesoExitoso)
+                                {
+                                    respuesta = _contactService.eliminarContactosPorOrganizacion(Convert.ToInt32(elim.ID_ORGANIZATION));
+                                }
+                            }
+                            foreach (var regis in lstregistros)
+                            {                                                             
                                 var procesar = this.ProcesarExcelMasivo(regis);
-                                contProcesardos++;
+                                contProcesardos++;                                
                                 if (!procesar.ProcesoExitoso)
                                     erroresTotal.Add($"Fila número {regis.REGISTRO_NUMBER} error al insertar registro: {procesar.MensajeRespuesta}");
                             }
@@ -465,6 +488,16 @@ namespace LD.Services.Organizations
                 respuesta.MensajeRespuesta = ex.Message;
             }            
             return respuesta;
+        }
+
+        public CUSTOMERS obtenerOrganizacionCustomerPorCodeCW(string codeCW)
+        {
+            return _repositoryCustomerCT.obtenerOrganizacionCustomerPorCodeCW(codeCW);
+        }
+
+        public List<ACTIVITY_LOG> obtenerLogsPorIdOrganizacion(long id)
+        {
+            return _auditoriaService.obtenerAuditoriaPorOrganizacion(id);
         }
     }
 }

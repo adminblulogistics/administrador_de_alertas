@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LD.Services.Parameters
 {    
-    public partial class ParametersService : Common.BaseServiceApplication<LD.EntitiesLD.SYSTEM_PARAMS>, IParametersService
+    public partial class ParametersService : IParametersService
     {
         private readonly IRepositoryParameters _repositoryParameters;
         public ParametersService(IRepositoryParameters repositoryParameters)

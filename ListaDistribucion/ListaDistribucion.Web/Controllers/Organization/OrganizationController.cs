@@ -196,5 +196,17 @@ namespace ListaDistribucion.Web.Controllers.Organization
 
             return View("~/Views/Organization/ResultProcesarExcelMasivo.cshtml", model);
         }
+        public IActionResult ListOrganizationLogs()
+        {
+            int idOrganization = Convert.ToInt32(Request.Form["idOrganization"]);
+            var listadoLogs = _organizationService.obtenerLogsPorIdOrganizacion(idOrganization);
+            ORGANIZATIONDto organizacion = _organizationService.obtenerOrganizacionPorId(idOrganization);
+            var model = new OrganizationModel
+            {
+                Organizacion = organizacion,
+                Logs = listadoLogs,
+            };
+            return View("~/Views/Organization/ListOrganizationLogs.cshtml", model);
+        }
     }
 }

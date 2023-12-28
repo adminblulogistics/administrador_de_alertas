@@ -14,7 +14,9 @@ namespace LD.Services.Interfaces.Alarms
         List<CONTACT_ALARMS> obtenerAlarmasPorContact(long idContact);
         Respuesta insertAlarmaContacto(CONTACT_ALARMS ContactAlarma);
         ALARMS obtenerAlarmaPorId(int id);
+        ALARMS obtenerAlarmaPorCode(string code);
         Respuesta eliminarAlarmasPorContacto(long id);
         Respuesta eliminarAlarmasPorOrganizacionContacto(long id);
+        List<CONTACT_ALARMS> obtenerAlarmasPorOrganizacionEvent(long id, string eventType);
     }
 }

@@ -13,6 +13,7 @@ namespace LD.Repositories.Interfaces
         GB_user obtenerUsuarioPorId(int idUser);
         List<GB_user> obtenerUsuarios(List<int> listId);
         GB_user obtenerUsuarioPorValores(long? documento, string email, string username);
+        string ObtenerCorreosPersonasInside(string code);
         #endregion
 
         #region Roles
