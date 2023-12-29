@@ -32,7 +32,7 @@ namespace LD.Services.Chrontab
                     await Process();
                     _nextRun = _schedule.GetNextOccurrence(DateTime.Now);
                 }
-                await Task.Delay(5000, stoppingToken); //5 seconds delay
+                await Task.Delay(15000, stoppingToken); //15 seconds delay
             }
             while (!stoppingToken.IsCancellationRequested);
         }

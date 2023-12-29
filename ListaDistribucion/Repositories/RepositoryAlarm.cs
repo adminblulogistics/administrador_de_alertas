@@ -67,5 +67,15 @@ namespace LD.Repositories
         {
             return _dbContext.CONTACT_ALARMS.Where(w => w.ID_ORGANIZATION == id && w.EVENTCODE == eventType).ToList(); 
         }
+        public Respuesta actualizarAlarma(ALARMS alarma)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            _dbContext.ALARMS.Update(alarma);
+            _dbContext.SaveChanges();
+
+            respuesta.ProcesoExitoso = true;
+            return respuesta;
+        }
     }
 }

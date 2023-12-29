@@ -40,5 +40,10 @@ namespace LD.Services.Auditoria
             }
             return lstLogs;
         }
+
+        public Respuesta insertarAuditoriaStatusAlarm(STATUS_ALARMS_LOG log)
+        {
+            return _repositoryAuditoria.insertarAuditoriaStatusAlarm(log);
+        }
     }
 }

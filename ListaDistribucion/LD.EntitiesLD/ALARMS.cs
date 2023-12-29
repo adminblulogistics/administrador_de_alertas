@@ -20,6 +20,7 @@ public partial class ALARMS
     public DateTime? LAST_TIME_EXECUTE { get; set; }
 
     public DateTime? NEXT_DATE_EXECUTE { get; set; }
+    public string SCHEDULE { get; set; }
 
     public bool ACTIVE { get; set; }
 }

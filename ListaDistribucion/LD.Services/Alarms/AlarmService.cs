@@ -54,5 +54,10 @@ namespace LD.Services.Alarms
         {
             return _repositoryAlarm.obtenerAlarmasPorOrganizacionEvent(id, eventType);
         }
+
+        public Respuesta actualizarAlarma(ALARMS alarma)
+        {
+            return _repositoryAlarm.actualizarAlarma(alarma);
+        }
     }
 }

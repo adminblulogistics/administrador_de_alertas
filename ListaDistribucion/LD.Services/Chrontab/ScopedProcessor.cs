@@ -20,7 +20,7 @@ namespace LD.Services.Chrontab
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
-                //await ProcessInScope(scope.ServiceProvider);
+                await ProcessInScope(scope.ServiceProvider);
             }
         }
 
