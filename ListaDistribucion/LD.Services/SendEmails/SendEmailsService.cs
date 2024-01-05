@@ -31,14 +31,6 @@ namespace LD.Services.SendEmails
 
             Respuesta respuesta = new Respuesta();
 
-            //if (IsSendEmailDevelop())
-            //{
-            //    body = body + $"<p align=\'center\'>Este correo llegara a: {destinatarios}</p>";
-            //    destinatarios = copiaLog;
-            //    emailsCC = string.Empty;
-            //    copiaLog = string.Empty;
-            //}
-
             try
             {
                 MailAddress from = new MailAddress(emailSend, String.Empty, System.Text.Encoding.UTF8);

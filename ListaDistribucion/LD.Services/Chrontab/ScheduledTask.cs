@@ -21,19 +21,15 @@ namespace LD.Services.Chrontab
         //proceso automatico
         public override async Task ProcessInScope(IServiceProvider serviceProvider)
         {
-            Console.Out.WriteLine("Task: AutoNomination");
+            Console.Out.WriteLine("Task: Alertas");
 
             Console.Out.WriteLine("Task: In Process");
             using (var scope = serviceProvider.CreateScope())
             {
                 var _notificationsService = scope.ServiceProvider.GetRequiredService<INotificationsService>();
 
-                await _notificationsService.NotificationsETA();
+                await _notificationsService.Notifications();
             }
-            //await _transport.GenerateDisponibilityAuto();
-            //await _pba.AutoProducerBalanceDeal();
-            //await _partners.AutoPartnersAvailability();
-
             Console.Out.WriteLine("Task: Completed");
 
         }

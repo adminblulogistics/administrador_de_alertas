@@ -35,5 +35,18 @@ namespace LD.Repositories
         {
             return _dbContext.ACTIVITY_LOG.Where(w => w.ID_CLIENT == id).ToList();
         }
+        public Respuesta insertarAuditoriaStatusAlarm(STATUS_ALARMS_LOG log)
+        {
+            Respuesta respuesta = new Respuesta();
+            log.DATE_CREATED = DateTime.UtcNow.AddHours(-5);
+
+            _dbContext.STATUS_ALARMS_LOG.Add(log);
+            _dbContext.SaveChanges();
+
+            respuesta.ProcesoExitoso = true;
+            respuesta.Id = log.ID_STATUS;
+
+            return respuesta;
+        }
     }
 }

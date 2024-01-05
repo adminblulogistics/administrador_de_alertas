@@ -18,5 +18,6 @@ namespace LD.Repositories.Interfaces
         Respuesta eliminarAlarmasPorContacto(long id);
         Respuesta eliminarAlarmasPorOrganizacionContacto(long id);
         List<CONTACT_ALARMS> obtenerAlarmasPorOrganizacionEvent(long id, string eventType);
+        Respuesta actualizarAlarma(ALARMS alarma);
     }
 }

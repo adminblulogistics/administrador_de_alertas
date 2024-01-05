@@ -106,6 +106,9 @@ public partial class ListaDistribucionContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.NEXT_DATE_EXECUTE).HasColumnType("datetime");
+            entity.Property(e => e.SCHEDULE)
+                .HasMaxLength(25)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<COMPANIES>(entity =>

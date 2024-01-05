@@ -12,5 +12,6 @@ namespace LD.Repositories.Interfaces
     {
         Respuesta insertarAuditoria(ACTIVITY_LOG log);
         List<ACTIVITY_LOG> obtenerAuditoriaPorOrganizacion(long id);
+        Respuesta insertarAuditoriaStatusAlarm(STATUS_ALARMS_LOG log);
     }
 }

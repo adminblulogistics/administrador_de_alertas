@@ -110,5 +110,10 @@ namespace LD.Entities.Enumerations
             EXPO = 2,
             STATUS = 3,
         }
+        public enum STATUS_SEND
+        {
+            OK =1,
+            ERR =2,
+        }
     }
 }
